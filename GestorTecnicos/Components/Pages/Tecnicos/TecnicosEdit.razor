@@ -1,17 +1,75 @@
 ﻿@page "/tecnicos/edit/{TecnicoId:int}"
 @inject TecnicosService tecnicosService
 @rendermode InteractiveServer
+@inject NavigationManager navigationManager
 
-<h3>TecnicosEdit</h3>
+<h3>Editar t&eacute;cnico</h3>
+
+@*HTML*@
+<PageTitle>Crear Técnico</PageTitle>
+<EditForm Model="Tecnico" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+
+    <div class="container">
+        <div class="card shadow-lg">
+            <div class="card-header text-center">
+                <h5 class="card-title">Editar T&eacute;cnico</h5>
+            </div>
+
+            <div class="card-body">
+                @*TecnicoId*@
+                <div class="mb-3">
+                    <label class="form-label"><strong>TecnicoId</strong></label>
+                    <InputNumber class="form-control" @bind-Value="Tecnico.TecnicoId" readonly />
+                </div>
+                @*Nombres*@
+                <div class="mb-3">
+                    <label class="alert-warning"><strong>@existeNombreLabel</strong></label><br />
+                    <label class="form-label"><strong>Nombres</strong></label>
+                    <InputText class="form-control" @bind-Value="Tecnico.Nombres" />
+                    <ValidationMessage For="@(() => Tecnico.Nombres)" />
+                </div>
+                @*SueldoHora*@
+                <div class="mb-3">
+                    <label class="form-label"><strong>SueldoHora</strong></label>
+                    <InputNumber class="form-control" @bind-Value="Tecnico.SueldoHora" />
+                    <ValidationMessage For="@(() => Tecnico.SueldoHora)" />
+                </div>
+            </div>
+
+            @*Footer*@
+            <div class="card-footer text-center mt-2">
+                <a href="@Urls.Index" class="btn-secondary"><span class="bi bi-arrow-left"></span>Volver</a>
+                <button type="submit" class="btn btn-primary bi bi-floppy">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+</EditForm>
 
 @code {
-    public Tecnicos Tecnico { get; set; }
+    public Tecnicos Tecnico { get; set; } = new();
     [Parameter] public int TecnicoId { get; set; }
+
+    public string existeNombreLabel = "";
+
     protected override async Task OnInitializedAsync()
     {
         Tecnico = await tecnicosService.Buscar(TecnicoId);
     }
 
-    
+    private async Task Guardar()
+    {
+        List<Tecnicos> tecnicos = await tecnicosService.Listar(t => t.Nombres == Tecnico.Nombres);
+        if (tecnicos.Count==1 && (tecnicos[0].TecnicoId != Tecnico.TecnicoId))
+        {
+            existeNombreLabel = "*Ya existe un técnico con ese nombre.";
+            return;
+        }
+        await tecnicosService.Insertar(Tecnico);
+        navigationManager.NavigateTo(Urls.Index);
+
+    }
+
 
 }

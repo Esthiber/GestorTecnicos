@@ -21,47 +21,61 @@ namespace GestorTecnicos.Services
 
         public async Task<bool> Existe(Tecnicos tecnico)
         {
-            await using var db = await Dbfactory.CreateDbContextAsync();
-            return await db.Tecnicos.AnyAsync(t => t.TecnicoId == tecnico.TecnicoId);
+            await using var contexto = await Dbfactory.CreateDbContextAsync();
+            return await contexto.Tecnicos.
+                AnyAsync(t => t.TecnicoId == tecnico.TecnicoId);
         }
 
         public async Task<bool> Insertar(Tecnicos tecnico)
         {
-            await using var db = await Dbfactory.CreateDbContextAsync();
-            db.Tecnicos.Add(tecnico);
-            return await db.SaveChangesAsync() > 0;
+            if (!await Existe(tecnico))
+            {
+                await using var contexto = await Dbfactory.CreateDbContextAsync();
+                contexto.Tecnicos.Add(tecnico);
+                return await contexto.SaveChangesAsync() > 0;
+            }
+            else //Por alguna razon aqui si funciona, no esta tomando encuenta en el metodo de Guardar
+            {
+                await using var contexto = await Dbfactory.CreateDbContextAsync();
+                contexto.Tecnicos.Update(tecnico);
+                return await contexto.SaveChangesAsync() > 0;
+            }
         }
 
         public async Task<bool> Modificar(Tecnicos tecnico)
         {
-            await using var db = await Dbfactory.CreateDbContextAsync();
-            db.Tecnicos.Update(tecnico);
-            return await db.SaveChangesAsync() > 0;
+            await using var contexto = await Dbfactory.CreateDbContextAsync();
+            contexto.Tecnicos.Update(tecnico);
+            return await contexto.SaveChangesAsync() > 0;
         }
 
         public async Task<Tecnicos?> Buscar(int id)
         {
-            await using var db = await Dbfactory.CreateDbContextAsync();
-            return await db.Tecnicos
-                .Include(t => t.TecnicoId == id)
-                .FirstOrDefaultAsync();
+            await using var contexto = await Dbfactory.CreateDbContextAsync();
+            return await contexto.Tecnicos
+                .FirstOrDefaultAsync(t => t.TecnicoId == id);
         }
 
         public async Task<bool> Eliminar(int id)
         {
-            await using var db = await Dbfactory.CreateDbContextAsync();
-            return await db.Tecnicos
+            await using var contexto = await Dbfactory.CreateDbContextAsync();
+            return await contexto.Tecnicos
                 .AsNoTracking()
                 .Where(t => t.TecnicoId == id)
                 .ExecuteDeleteAsync() > 0;
-
         }
 
-        // metodo listar
-        public async Task<List<Tecnicos>> Listar(Expression<Func<Tecnicos,bool>> criterio)
+        public async Task<bool> ExisteNombres(string nombres)
         {
-            await using var db = await Dbfactory.CreateDbContextAsync();
-            return await db.Tecnicos
+            await using var contexto = await Dbfactory.CreateDbContextAsync();
+            return await contexto.Tecnicos
+                .AnyAsync(t => t.Nombres == nombres);
+        }
+
+        public async Task<List<Tecnicos>> Listar(Expression<Func<Tecnicos, bool>> criterio)
+        {
+            await using var contexto = await Dbfactory.CreateDbContextAsync();
+            return await contexto.Tecnicos
                 .Where(criterio)
                 .AsNoTracking()
                 .ToListAsync();
