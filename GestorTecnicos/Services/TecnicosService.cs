@@ -80,5 +80,7 @@ namespace GestorTecnicos.Services
                 .AsNoTracking()
                 .ToListAsync();
         }
+    
+
     }
 }
