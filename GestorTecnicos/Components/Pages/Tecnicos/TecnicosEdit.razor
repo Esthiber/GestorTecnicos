@@ -1,0 +1,17 @@
+﻿@page "/tecnicos/edit/{TecnicoId:int}"
+@inject TecnicosService tecnicosService
+@rendermode InteractiveServer
+
+<h3>TecnicosEdit</h3>
+
+@code {
+    public Tecnicos Tecnico { get; set; }
+    [Parameter] public int TecnicoId { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        Tecnico = await tecnicosService.Buscar(TecnicoId);
+    }
+
+    
+
+}
