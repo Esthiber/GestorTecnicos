@@ -1,0 +1,9 @@
+﻿@page "/clientes/edit/{ClienteId:int}"
+@inject ClientesService clientesService
+@rendermode InteractiveServer
+
+<h3>ClientesEdit</h3>
+
+@code {
+    [Parameter] public int ClienteId { get; set; }
+}
