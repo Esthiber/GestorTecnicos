@@ -41,7 +41,7 @@
 
             @*Footer*@
             <div class="card-footer text-center mt-2">
-                <a href="@Urls.Index" class="btn-secondary"><span class="bi bi-arrow-left"></span>Volver</a>
+                <a href="@Urls.TecnicosIndex" class="btn-secondary"><span class="bi bi-arrow-left"></span>Volver</a>
                 <button type="submit" class="btn btn-primary bi bi-floppy">Guardar</button>
             </div>
         </div>
@@ -69,7 +69,7 @@
             return;
         }
         await tecnicosService.Insertar(Tecnico);
-        navigationManager.NavigateTo(Urls.Index);
+        navigationManager.NavigateTo(Urls.TecnicosIndex);
 
     }
 
