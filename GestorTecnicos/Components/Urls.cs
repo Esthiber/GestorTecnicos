@@ -3,8 +3,8 @@
     public static class Urls
     {
         public static string Home => "/";
-        public static string Index => "/tecnicos";
-        public static string Crear => "/tecnicos/create";
-        public static string Editar => "/tecnicos/edit";
+        public static string TecnicosIndex => "/tecnicos";
+        public static string TecnicosCrear => "/tecnicos/create";
+        public static string TecnicosEditar => "/tecnicos/edit";
     }
 }
