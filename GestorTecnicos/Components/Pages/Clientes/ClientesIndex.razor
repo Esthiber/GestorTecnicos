@@ -1,10 +1,135 @@
 ﻿@page "/clientes"
 @rendermode InteractiveServer
 @inject ClientesService clientesService
+@inject TecnicosService tecnicosService
 
 <PageTitle>Clientes</PageTitle>
 <h3>ClientesIndex</h3>
 
+<div class="container">
+    <div class="card shadow-lg">
+        <div class="card-header space-between">
+            <h5 class="card-title text-center">Registro de Clientes</h5>
+            <a href="@Urls.ClientesCrear" class="btn btn-primary"> <span class="bi bi-plus-square bi-trask mt-3"></span> Crear</a>
+        </div>
+
+        <div class="card-body">
+
+            @*labels*@
+            <div class="row">
+
+                @*Filtrar por*@
+                <div class="col-3">
+                    <label class="col-form-label"><strong>Filtrar por</strong></label>
+                </div>
+
+                @*ValorFiltro*@
+                <div class="col-4">
+                    <label class="col-form-label"><strong>B&uacute;squeda</strong></label>
+                </div>
+            </div>
+
+            @*Inputs y botones*@
+            <div class="row align-items-center">
+                @*filtro*@
+                <div class="col-3">
+                    <InputSelect class="form-select" @bind-Value="Filtro">
+                        <option value="" selected disabled>Elija una opci&oacute;n</option>
+                        <option value="Id">Id</option>
+                        <option value="Nombres">Nombres</option>
+                        <option value="Rnc">RNC</option>
+                    </InputSelect>
+                </div>
+
+                @*Busqueda*@
+                <div class="col-4">
+                    <div class="input-group">
+                        <input class="form-control" @bind="ValorFiltro" placeholder="Buscar" />
+                        <button type="button" class="btn btn-outline-primary bi bi-search" @onclick="Buscar">Search</button>
+                    </div>
+                </div>
+            </div>
+
+            <table class="table table-hover">
+                <thead class="table  table-striped text-black">
+                    <tr>
+                        <th>ClienteId</th>
+                        <th>Nombres</th>
+                        <th>Fecha Ingreso</th>
+                        <th>Direccion</th>
+                        <th>Limite Credito</th>
+                        <th>Tecnico</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var cliente in clientes)
+                    {
+                        <tr>
+                            <td> @cliente.ClienteId</td>
+                            <td> @cliente.Nombres</td>
+                            <td> @cliente.FechaIngreso</td>
+                            <td> @cliente.Direccion</td>
+                            <td> @cliente.LimiteCredito</td>
+                            <td> @BuscarTecnico(cliente.TecnicoId).Result.Nombres</td>
+
+                            @*BTN Editar*@
+                            <td class="text-center">
+                                <a href="@Urls.ClientesEditar/@cliente.ClienteId" class="btn btn-outline-primary bi bi-pencil-square">Edit</a>
+                            </td>
+
+                            @*BTN Eliminar*@
+                            <td class="text-center">
+                                <button class="btn btn-outline-danger bi bi-trash" @onclick="() => Eliminar(cliente.ClienteId)">Del</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer space-between">
+            <label>Clientes:  @clientes.Count()</label>
+        </div>
+    </div>
+</div>
+
+
 @code {
+    public string Filtro { get; set; } = string.Empty;
+    public string ValorFiltro { get; set; } = string.Empty;
+
+    List<Clientes> clientes = new();
+    List<Tecnicos> tecnicos = new();
+    protected override async Task OnInitializedAsync()
+    {
+        clientes = await clientesService.Listar((c) => c != null);
+        tecnicos = await tecnicosService.Listar((t) => t.TecnicoId > 0);
+    }
+
+    private async Task Buscar()
+    {
+        if (Filtro == "Id")
+        {
+            clientes = await clientesService.Listar((t) => t.ClienteId.ToString().Contains(ValorFiltro));
+        }
+        else if (Filtro == "Nombres")
+        {
+            clientes = await clientesService.Listar((t) => t.Nombres.Contains(ValorFiltro));
+        }
+        else if (Filtro == "Rnc")
+        {
+            clientes = await clientesService.Listar((t) => t.Rnc.Contains(ValorFiltro));
+        }
+    }
+
+
+    private async Task<Tecnicos> BuscarTecnico(int id) => tecnicos.Find(t => t.TecnicoId == id);
+
+    private async Task Eliminar(int id)
+    {
+
+        await clientesService.Eliminar(id);
+        clientes = await clientesService.Listar((c) => c != null);
+    }
+
 
 }
