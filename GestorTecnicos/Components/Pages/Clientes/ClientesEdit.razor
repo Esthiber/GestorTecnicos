@@ -1,5 +1,6 @@
 ﻿@page "/clientes/edit/{ClienteId:int}"
 @inject ClientesService clientesService
+@inject TecnicosService tecnicosService
 @rendermode InteractiveServer
 @inject NavigationManager navigationManager
 
@@ -11,14 +12,19 @@
     <div class="container">
         <div class="card shadow-lg">
             <div class="card-header text-center">
-                <h5 class="card-title">Editar Cliente</h5>
+                <h5 class="card-title">Crear Cliente</h5>
             </div>
 
             <div class="card-body">
-                @*TecnicoId*@
+                @*ClienteId*@
                 <div class="mb-3">
                     <label class="form-label"><strong>ClienteId</strong></label>
                     <InputNumber class="form-control" @bind-Value="cliente.ClienteId" readonly />
+                </div>
+                @*FechaIngreso*@
+                <div class="mb-3">
+                    <label class="form-label"><strong>FechaIngreso</strong></label>
+                    <InputDate class="form-control" @bind-Value="cliente.FechaIngreso" readonly />
                 </div>
                 @*Nombres*@
                 <div class="mb-3">
@@ -27,11 +33,36 @@
                     <InputText class="form-control" @bind-Value="cliente.Nombres" />
                     <ValidationMessage For="@(() => cliente.Nombres)" />
                 </div>
-                @*Limite Credito*@
+                @*Direccion*@
+                <div class="mb-3">
+                    <label class="form-label"><strong>Direcci&oacute;n</strong></label>
+                    <InputText class="form-control" @bind-Value="cliente.Direccion" />
+                    <ValidationMessage For="@(() => cliente.Direccion)" />
+                </div>
+                @*RNC*@
+                <div class="mb-3">
+                    <label class="form-label
+                    "><strong>RNC</strong></label>
+                    <InputText class="form-control" @bind-Value="cliente.Rnc" />
+                    <ValidationMessage For="@(() => cliente.Rnc)" />
+                </div>
+                @*LimiteCredito*@
                 <div class="mb-3">
                     <label class="form-label"><strong>Limite Credito</strong></label>
                     <InputNumber class="form-control" @bind-Value="cliente.LimiteCredito" />
                     <ValidationMessage For="@(() => cliente.LimiteCredito)" />
+                </div>
+
+                @*Tecnico*@
+                <div class="mb-3">
+                    <label class="form-label"><strong>T&eacute;cnico</strong></label>
+                    <InputSelect class="form-control" @bind-Value="cliente.TecnicoId">
+                        <option value="" selected disabled>Elija un t&eacute;cnico</option>
+                        @foreach (var tecnico in tecnicos)
+                        {
+                            <option value="@tecnico.TecnicoId">@tecnico.Nombres</option>
+                        }
+                    </InputSelect>
                 </div>
             </div>
 
@@ -49,10 +80,13 @@
     public Clientes? cliente { get; set; } = new();
     [Parameter] public int ClienteId { get; set; }
 
+    List<Tecnicos> tecnicos = new();
+
     public string existeNombreLabel = "";
 
     protected override async Task OnInitializedAsync()
     {
+        tecnicos = await tecnicosService.Listar((t) => t.TecnicoId > 0);
         cliente = await clientesService.Buscar(ClienteId);
     }
 
