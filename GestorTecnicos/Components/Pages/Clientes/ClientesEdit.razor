@@ -1,9 +1,73 @@
 ﻿@page "/clientes/edit/{ClienteId:int}"
 @inject ClientesService clientesService
 @rendermode InteractiveServer
+@inject NavigationManager navigationManager
 
+<PageTitle>Editar Cliente #@ClienteId</PageTitle>
 <h3>ClientesEdit</h3>
+<EditForm Model="cliente" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+
+    <div class="container">
+        <div class="card shadow-lg">
+            <div class="card-header text-center">
+                <h5 class="card-title">Editar Cliente</h5>
+            </div>
+
+            <div class="card-body">
+                @*TecnicoId*@
+                <div class="mb-3">
+                    <label class="form-label"><strong>ClienteId</strong></label>
+                    <InputNumber class="form-control" @bind-Value="cliente.ClienteId" readonly />
+                </div>
+                @*Nombres*@
+                <div class="mb-3">
+                    <label class="alert-warning"><strong>@existeNombreLabel</strong></label><br />
+                    <label class="form-label"><strong>Nombres</strong></label>
+                    <InputText class="form-control" @bind-Value="cliente.Nombres" />
+                    <ValidationMessage For="@(() => cliente.Nombres)" />
+                </div>
+                @*Limite Credito*@
+                <div class="mb-3">
+                    <label class="form-label"><strong>Limite Credito</strong></label>
+                    <InputNumber class="form-control" @bind-Value="cliente.LimiteCredito" />
+                    <ValidationMessage For="@(() => cliente.LimiteCredito)" />
+                </div>
+            </div>
+
+            @*Footer*@
+            <div class="card-footer text-center mt-2">
+                <a href="@Urls.ClientesIndex" class="btn-secondary"><span class="bi bi-arrow-left"></span>Volver</a>
+                <button type="submit" class="btn btn-primary bi bi-floppy">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+</EditForm>
 
 @code {
+    public Clientes? cliente { get; set; } = new();
     [Parameter] public int ClienteId { get; set; }
+
+    public string existeNombreLabel = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        cliente = await clientesService.Buscar(ClienteId);
+    }
+
+    private async Task Guardar()
+    {
+        List<Clientes> clientes = await clientesService.Listar(c => c.Nombres == cliente.Nombres);
+        if (clientes.Count == 1 && (clientes[0].ClienteId != cliente.ClienteId))
+        {
+            existeNombreLabel = "*Ya existe un cliente con ese nombre.";
+            return;
+        }
+        await clientesService.Insertar(cliente);
+        navigationManager.NavigateTo(Urls.ClientesIndex);
+
+    }
+
+
 }
