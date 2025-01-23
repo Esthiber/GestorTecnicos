@@ -1,6 +1,11 @@
 ﻿@page "/"
+@inject NavigationManager navigationManager
 
 <PageTitle>Gestor Tecnicos</PageTitle>
+
+<div class="modal modal-static modal-fullscreen modal-xl show">
+    Hey
+</div>
 
 <h3 class="modal-header">Home</h3>
 <div class="card shadow-lg">
@@ -8,9 +13,43 @@
     <div class="card-body text-center">
         <p class="">2022-0562</p>
         <p>Desarrollador de Software</p>
-    </div>    
+    </div>
+</div>
+
+<div class="card-group shadow-sm">
+
+    @*Card Tecnicos*@
+    <div class="card m-sm-2">
+        <h3 class="card-header">T&eacute;cnicos</h3>
+        <p class="card-body">Registro de T&eacute;cnicos.</p>
+        <div class="btn-group-sm p-md-2 text-center">
+            <a class="btn btn-primary  w-25" href="@Urls.TecnicosIndex">Ver</a>
+            <a class="btn btn-secondary w-25" href="@Urls.TecnicosCrear">Crear</a>
+        </div>
+    </div>
+
+    @*Card Clientes*@
+    <div class="card m-sm-2">
+        <h3 class="card-header">Clientes</h3>
+        <p class="card-body">Registro de Clientes</p>
+        <div class="btn-group-sm p-md-2 text-center">
+            <a class="btn btn-primary w-25" href="@Urls.ClientesIndex">Ver</a>
+            <a class="btn btn-secondary w-25" href="@Urls.ClientesCrear">Crear</a>
+        </div>
+    </div>
+
+    @*Card Extra*@
+    <div class="card m-sm-2">
+        <h3 class="card-header">XX</h3>
+        <p class="card-body">XXXXX</p>
+        <div class="btn-group-sm p-md-2 text-center">
+            <a class="btn btn-primary w-25" href="@Urls.Home">Ver</a>
+            <a class="btn btn-secondary w-25" href="@Urls.Home">Crear</a>
+        </div>
+    </div>
 </div>
 
 @code {
+
 
 }
