@@ -98,7 +98,7 @@
             existeNombreLabel = "*Ya existe un cliente con ese nombre.";
             return;
         }
-        await clientesService.Insertar(cliente);
+        await clientesService.Guardar(cliente);
         navigationManager.NavigateTo(Urls.ClientesIndex);
 
     }
