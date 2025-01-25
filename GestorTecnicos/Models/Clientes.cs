@@ -26,6 +26,7 @@ namespace GestorTecnicos.Models
         public double LimiteCredito { get; set; }
 
         [Required(ErrorMessage = "El Tecnico es Requerido")]
+        [Range(minimum: 1, int.MaxValue, ErrorMessage = "Por favor, seleccione un tecnico.")]
         public int TecnicoId { get; set; }
 
     }

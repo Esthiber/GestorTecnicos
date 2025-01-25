@@ -13,6 +13,7 @@
         <div class="card shadow-lg">
             <div class="card-header text-center">
                 <h5 class="card-title">Crear Cliente</h5>
+                <label class="alert-warning"><strong>@errorLabel</strong></label><br />
             </div>
 
             <div class="card-body">
@@ -28,7 +29,7 @@
                 </div>
                 @*Nombres*@
                 <div class="mb-3">
-                    <label class="alert-warning"><strong>@existeNombreLabel</strong></label><br />
+                    
                     <label class="form-label"><strong>Nombres</strong></label>
                     <InputText class="form-control" @bind-Value="cliente.Nombres" />
                     <ValidationMessage For="@(() => cliente.Nombres)" />
@@ -57,8 +58,10 @@
                 <div class="mb-3">
                     <label class="form-label"><strong>T&eacute;cnico</strong></label>
                     <InputSelect class="form-control" @bind-Value="cliente.TecnicoId">
-                        <option value="" selected disabled>Elija un t&eacute;cnico</option>
-                        @foreach (var tecnico in tecnicos)
+
+                        <option value="0" selected disabled>Elija un t&eacute;cnico</option>
+
+                        @foreach (var tecnico in listaTecnicos)
                         {
                             <option value="@tecnico.TecnicoId">@tecnico.Nombres</option>
                         }
@@ -79,24 +82,40 @@
 @code {
     Clientes cliente = new();
 
-    List<Tecnicos> tecnicos = new();
+    List<Tecnicos> listaTecnicos = new();
+    List<Clientes> listaClientes = new();
 
-    public string existeNombreLabel = "";
+    public string errorLabel = "";
 
     protected override async Task OnInitializedAsync()
     {
-        tecnicos = await tecnicosService.Listar((t) => t.TecnicoId > 0);
+        listaTecnicos = await tecnicosService.Listar((t) => t.TecnicoId > 0);
+        listaClientes = await clientesService.Listar((c) => c.ClienteId > 0);
         cliente.FechaIngreso = DateTime.Now;
     }
 
+    public async Task<bool> ComprobarRNC(string RNC)
+    {
+        return listaClientes.Count(c => c.Rnc == RNC) > 0;
+    }
+    public async Task<bool> ComprobarNombre(string Nombre)
+    {
+        return listaClientes.Count(c => c.Nombres == Nombre) > 0;
+    }
+   
     private async Task Guardar()
     {
-        List<Clientes> clientes = await clientesService.Listar(c => c.Nombres == cliente.Nombres);
-        if (clientes.Count == 1 && (clientes[0].ClienteId != cliente.ClienteId))
+        if (await ComprobarNombre(cliente.Nombres))
         {
-            existeNombreLabel = "*Ya existe un técnico con ese nombre";
+            errorLabel = "*Ya existe un cliente con ese nombre";
             return;
         }
+        if (await ComprobarRNC(cliente.Rnc))
+        {
+            errorLabel = "*Ya existe un tecnico con ese RNC";
+            return;
+        }
+
         await clientesService.Insertar(cliente);
         navigationManager.NavigateTo(Urls.ClientesIndex);
 
