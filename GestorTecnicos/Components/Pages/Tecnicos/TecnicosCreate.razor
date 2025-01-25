@@ -63,7 +63,7 @@
             existeNombreLabel = "*Ya existe un técnico con ese nombre";
             return;
         }
-        await tecnicosService.Insertar(Tecnico);
+        await tecnicosService.Guardar(Tecnico);
         navigationManager.NavigateTo(Urls.TecnicosIndex);
 
     }
