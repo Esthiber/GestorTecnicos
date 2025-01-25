@@ -1,16 +1,67 @@
 ﻿@page "/"
+@inject NavigationManager navigationManager
 
 <PageTitle>Gestor Tecnicos</PageTitle>
 
-<h3 class="modal-header">Home</h3>
+<div class="modal modal-static modal-fullscreen modal-xl show">
+    Hey
+</div>
+
+<h3 class="modal-header"><i class="bi bi-house-door-fill"></i> Home</h3>
 <div class="card shadow-lg">
     <h2 class="card-header text-center">E. Valentin Taveras</h2>
     <div class="card-body text-center">
         <p class="">2022-0562</p>
         <p>Desarrollador de Software</p>
-    </div>    
+    </div>  
+</div>
+
+<div class="card-group shadow-sm">
+
+    @*Card Tecnicos*@
+    <div class="card m-sm-2">
+        <h3 class="card-header">T&eacute;cnicos</h3>
+        <p class="card-body">Registro de T&eacute;cnicos.</p>
+        <div class="btn-group-sm p-md-2 text-center">
+            <a class="btn btn-primary  w-25" href="@Urls.TecnicosIndex">
+                <i class="bi bi-eye"></i> Ver
+            </a>
+            <a class="btn btn-secondary w-25" href="@Urls.TecnicosCrear">
+                <i class="bi bi-person-plus"></i> Crear
+            </a>
+        </div>
+    </div>
+
+    @*Card Clientes*@
+    <div class="card m-sm-2">
+        <h3 class="card-header">Clientes</h3>
+        <p class="card-body">Registro de Clientes</p>
+        <div class="btn-group-sm p-md-2 text-center">
+            <a class="btn btn-primary w-25" href="@Urls.ClientesIndex">
+                <i class="bi bi-eye"></i> Ver
+            </a>
+            <a class="btn btn-secondary w-25" href="@Urls.ClientesCrear">
+                <i class="bi bi-person-plus"></i> Crear
+            </a>
+        </div>
+    </div>
+
+    @*Card Extra*@
+    <div class="card m-sm-2">
+        <h3 class="card-header">XX</h3>
+        <p class="card-body">XXXXX</p>
+        <div class="btn-group-sm p-md-2 text-center">
+            <a class="btn btn-primary w-25" href="@Urls.Home">
+                <i class="bi bi-eye"></i> Ver
+            </a>
+            <a class="btn btn-secondary w-25" href="@Urls.Home">
+                <i class="bi bi-person-plus"></i> Crear
+            </a>
+        </div>
+    </div>
 </div>
 
 @code {
+
 
 }

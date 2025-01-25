@@ -1,0 +1,124 @@
+﻿@page "/clientes/create"
+@inject ClientesService clientesService
+@inject TecnicosService tecnicosService
+@rendermode InteractiveServer
+@inject NavigationManager navigationManager
+
+<PageTitle>Crear Cliente</PageTitle>
+<h3>ClientesCreate</h3>
+<EditForm Model="cliente" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+
+    <div class="container">
+        <div class="card shadow-lg">
+            <div class="card-header text-center">
+                <h5 class="card-title">Crear Cliente</h5>
+                <label class="alert-warning"><strong>@errorLabel</strong></label><br />
+            </div>
+
+            <div class="card-body">
+                @*ClienteId*@
+                <div class="mb-3">
+                    <label class="form-label"><strong>ClienteId</strong></label>
+                    <InputNumber class="form-control" @bind-Value="cliente.ClienteId" readonly />
+                </div>
+                @*FechaIngreso*@
+                <div class="mb-3">
+                    <label class="form-label"><strong>FechaIngreso</strong></label>
+                    <InputDate class="form-control" @bind-Value="cliente.FechaIngreso" readonly />
+                </div>
+                @*Nombres*@
+                <div class="mb-3">
+                    
+                    <label class="form-label"><strong>Nombres</strong></label>
+                    <InputText class="form-control" @bind-Value="cliente.Nombres" />
+                    <ValidationMessage For="@(() => cliente.Nombres)" />
+                </div>
+                @*Direccion*@
+                <div class="mb-3">
+                    <label class="form-label"><strong>Direcci&oacute;n</strong></label>
+                    <InputText class="form-control" @bind-Value="cliente.Direccion" />
+                    <ValidationMessage For="@(() => cliente.Direccion)" />
+                </div>
+                @*RNC*@
+                <div class="mb-3">
+                    <label class="form-label
+                    "><strong>RNC</strong></label>
+                    <InputText class="form-control" @bind-Value="cliente.Rnc" />
+                    <ValidationMessage For="@(() => cliente.Rnc)" />
+                </div>
+                @*LimiteCredito*@
+                <div class="mb-3">
+                    <label class="form-label"><strong>Limite Credito</strong></label>
+                    <InputNumber class="form-control" @bind-Value="cliente.LimiteCredito" />
+                    <ValidationMessage For="@(() => cliente.LimiteCredito)" />
+                </div>
+
+                @*Tecnico*@
+                <div class="mb-3">
+                    <label class="form-label"><strong>T&eacute;cnico</strong></label>
+                    <InputSelect class="form-control" @bind-Value="cliente.TecnicoId">
+
+                        <option value="0" selected disabled>Elija un t&eacute;cnico</option>
+
+                        @foreach (var tecnico in listaTecnicos)
+                        {
+                            <option value="@tecnico.TecnicoId">@tecnico.Nombres</option>
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+            @*Footer*@
+            <div class="card-footer text-center mt-2">
+                <a href="@Urls.ClientesIndex" class=" btn btn-secondary"><span class="bi bi-arrow-left"></span> Volver</a>
+                <button type="submit" class="btn btn-primary bi bi-floppy">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+</EditForm>
+
+@code {
+    Clientes cliente = new();
+
+    List<Tecnicos> listaTecnicos = new();
+    List<Clientes> listaClientes = new();
+
+    public string errorLabel = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        listaTecnicos = await tecnicosService.Listar((t) => t.TecnicoId > 0);
+        listaClientes = await clientesService.Listar((c) => c.ClienteId > 0);
+        cliente.FechaIngreso = DateTime.Now;
+    }
+
+    public async Task<bool> ComprobarRNC(string RNC)
+    {
+        return listaClientes.Count(c => c.Rnc == RNC) > 0;
+    }
+    public async Task<bool> ComprobarNombre(string Nombre)
+    {
+        return listaClientes.Count(c => c.Nombres == Nombre) > 0;
+    }
+   
+    private async Task Guardar()
+    {
+        if (await ComprobarNombre(cliente.Nombres))
+        {
+            errorLabel = "*Ya existe un cliente con ese nombre";
+            return;
+        }
+        if (await ComprobarRNC(cliente.Rnc))
+        {
+            errorLabel = "*Ya existe un tecnico con ese RNC";
+            return;
+        }
+
+        await clientesService.Insertar(cliente);
+        navigationManager.NavigateTo(Urls.ClientesIndex);
+
+    }
+
+}

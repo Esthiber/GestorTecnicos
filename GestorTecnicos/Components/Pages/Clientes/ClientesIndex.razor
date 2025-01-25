@@ -1,19 +1,16 @@
-﻿@page "/tecnicos"
-@using Microsoft.AspNetCore.Components.Forms
-@inject TecnicosService tecnicosService
-@inject NavigationManager navigationManager
+﻿@page "/clientes"
 @rendermode InteractiveServer
+@inject ClientesService clientesService
+@inject TecnicosService tecnicosService
 
-<h3><i class="bi bi-person-fill-gear"></i> T&eacute;cnicos</h3>
+<PageTitle>Clientes</PageTitle>
+<h3><i class="bi bi-people-fill"></i> Clientes</h3>
 
-@*HTML*@
-
-<PageTitle>Lista de Técnicos</PageTitle>
 <div class="container">
     <div class="card shadow-lg">
         <div class="card-header space-between">
-            <h5 class="card-title text-center">Registro de T&eacute;cnicos</h5>
-            <a href="@Urls.TecnicosCrear" class="btn btn-primary"> <span class="bi bi-plus-square bi-trask mt-3"></span> Crear</a>
+            <h5 class="card-title text-center">Registro de Clientes</h5>
+            <a href="@Urls.ClientesCrear" class="btn btn-primary"> <span class="bi bi-plus-square bi-trask mt-3"></span> Crear</a>
         </div>
 
         <div class="card-body">
@@ -40,7 +37,7 @@
                         <option value="" selected disabled>Elija una opci&oacute;n</option>
                         <option value="Id">Id</option>
                         <option value="Nombres">Nombres</option>
-                        <option value="SueldoHora">Sueldo Por Hora</option>
+                        <option value="Rnc">RNC</option>
                     </InputSelect>
                 </div>
 
@@ -56,30 +53,35 @@
             <table class="table table-hover">
                 <thead class="table  table-striped text-black">
                     <tr>
-                        
-                        <th>TecnicoId</th>
+                        <th>ClienteId</th>
                         <th>Nombres</th>
-                        <th>Sueldo Por Hora</th>
-                        <th colspan="2" class="text-center">Acciones</th>
+                        <th>Fecha Ingreso</th>
+                        <th>Direccion</th>
+                        <th>Limite Credito</th>
+                        <th>T&eacute;cnico</th>
+                        <th class="text-center" colspan="2">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var tecnico in tecnicos)
+                    @foreach (var cliente in listaClientes)
                     {
                         <tr>
                             @*Detalle*@
-                            <td> @tecnico.TecnicoId</td>
-                            <td> @tecnico.Nombres</td>
-                            <td> $ @tecnico.SueldoHora</td>
+                            <td> @cliente.ClienteId</td>
+                            <td> @cliente.Nombres</td>
+                            <td> @cliente.FechaIngreso</td>
+                            <td> @cliente.Direccion</td>
+                            <td> $ @cliente.LimiteCredito</td>
+                            <td> @BuscarTecnico(cliente.TecnicoId).Result.Nombres</td>
 
                             @*BTN Editar*@
                             <td class="text-center">
-                                <a href="@Urls.TecnicosEditar/@tecnico.TecnicoId" class="btn btn-outline-primary bi bi-pencil-square"></a>
+                                <a href="@Urls.ClientesEditar/@cliente.ClienteId" class="btn btn-outline-primary bi bi-pencil-square"></a>
                             </td>
 
                             @*BTN Eliminar*@
                             <td class="text-center">
-                                <button class="btn btn-outline-danger bi bi-trash" @onclick="() => Eliminar(tecnico.TecnicoId)"></button>
+                                <button class="btn btn-outline-danger bi bi-trash" @onclick="() => Eliminar(cliente.ClienteId)"></button>
                             </td>
                         </tr>
                     }
@@ -87,44 +89,59 @@
             </table>
         </div>
         <div class="card-footer space-between">
-            <label>Tecnicos:  @tecnicos.Count()</label>
-            <label> | Pagos Por Hora Total: $ @tecnicos.Sum(p => p.SueldoHora)</label>
+            <label>Clientes:  @listaClientes.Count()</label>
         </div>
     </div>
 </div>
 
-@code {
-    List<Tecnicos> tecnicos = new();
 
+@code {
     public string Filtro { get; set; } = string.Empty;
     public string ValorFiltro { get; set; } = string.Empty;
 
+    List<Clientes> listaClientes = new();
+    List<Tecnicos> listaTecnicos = new();
     protected override async Task OnInitializedAsync()
     {
-        tecnicos = await tecnicosService.Listar((t) => t != null);
+        listaClientes = await clientesService.Listar((c) => c.ClienteId > 0);
+        listaTecnicos = await tecnicosService.Listar((t) => t.TecnicoId > 0);
+
+        Tecnicos tecnicos = await BuscarTecnico(1);
     }
 
     private async Task Buscar()
     {
         if (Filtro == "Id")
         {
-            tecnicos = await tecnicosService.Listar((t) => t.TecnicoId.ToString().Contains(ValorFiltro));
+            listaClientes = await clientesService.Listar((t) => t.ClienteId.ToString().Contains(ValorFiltro));
         }
         else if (Filtro == "Nombres")
         {
-            tecnicos = await tecnicosService.Listar((t) => t.Nombres.Contains(ValorFiltro));
+            listaClientes = await clientesService.Listar((t) => t.Nombres.Contains(ValorFiltro));
         }
-        else if (Filtro == "SueldoHora")
+        else if (Filtro == "Rnc")
         {
-            tecnicos = await tecnicosService.Listar((t) => t.SueldoHora.ToString().Contains(ValorFiltro));
+            listaClientes = await clientesService.Listar((t) => t.Rnc.Contains(ValorFiltro));
         }
+    }
 
+    private async Task<Tecnicos> BuscarTecnico(int id)
+    {
+        Tecnicos? t = listaTecnicos.Find(t => t.TecnicoId == id);
+        if (t != null) return t;
+
+        t = new Tecnicos();
+        t.Nombres = "No asignado";
+
+        return t;
     }
 
     private async Task Eliminar(int id)
     {
-        await tecnicosService.Eliminar(id);
-        tecnicos = await tecnicosService.Listar((t) => t != null);
+
+        await clientesService.Eliminar(id);
+        listaClientes = await clientesService.Listar((c) => c != null);
     }
+
 
 }
