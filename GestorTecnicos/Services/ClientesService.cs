@@ -8,19 +8,34 @@ namespace GestorTecnicos.Services
 {
     public class ClientesService(IDbContextFactory<Contexto> Dbfactory)
     {
-        public async Task<bool> Insertar(Clientes cliente) {
+        public async Task<bool> Guardar(Clientes cliente)
+        {
+            if (!await Existe(cliente.ClienteId))
+            {
+                return await Insertar(cliente);
+            }
+            else
+            {
+                return await Modificar(cliente);
+            }
+        }
+
+        public async Task<bool> Insertar(Clientes cliente)
+        {
             await using var contexto = await Dbfactory.CreateDbContextAsync();
             contexto.Clientes.Add(cliente);
             return await contexto.SaveChangesAsync() > 0;
         }
-        
-        public async Task<bool> Modificar(Clientes cliente) {
+
+        public async Task<bool> Modificar(Clientes cliente)
+        {
             await using var contexto = await Dbfactory.CreateDbContextAsync();
             contexto.Clientes.Update(cliente);
             return await contexto.SaveChangesAsync() > 0;
         }
-        
-        public async Task<bool> Eliminar(int id) {
+
+        public async Task<bool> Eliminar(int id)
+        {
             await using var contexto = await Dbfactory.CreateDbContextAsync();
             return await contexto.Clientes
                 .AsNoTracking()
@@ -65,7 +80,7 @@ namespace GestorTecnicos.Services
         /// <param name="id"></param>
         /// <param name="nombres"></param>
         /// <returns></returns>
-        public async Task<bool> Existe(int id,string nombres)
+        public async Task<bool> Existe(int id, string nombres)
         {
             await using var contexto = await Dbfactory.CreateDbContextAsync();
             return await contexto.Clientes.
