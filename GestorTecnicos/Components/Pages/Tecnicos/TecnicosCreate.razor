@@ -13,7 +13,7 @@
     <div class="container">
         <div class="card shadow-lg">
             <div class="card-header text-center">
-                <h5 class="card-title">Crear Tecnico</h5>
+                <h5 class="card-title">Crear T&eacute;cnico <i class="bi bi-person-fill-gear"></i></h5>
             </div>
 
             <div class="card-body">
@@ -39,8 +39,10 @@
 
             @*Footer*@
             <div class="card-footer text-center mt-2">
-                <a href="@Urls.TecnicosIndex" class="btn-secondary"><span class="bi bi-arrow-left"></span>Volver</a>
-                <button type="submit" class="btn btn-primary bi bi-floppy">Guardar</button>
+                <a href="@Urls.TecnicosIndex" class="btn btn-secondary">
+                    <span class="bi bi-arrow-left"></span> Volver
+                </a>
+                <button type="submit" class="btn btn-primary bi bi-floppy"> Guardar</button>
             </div>
         </div>
     </div>
@@ -49,7 +51,7 @@
 
 @code {
     Tecnicos Tecnico = new Tecnicos();
- 
+
 
     public string existeNombreLabel = "";
 
@@ -63,7 +65,7 @@
         }
         await tecnicosService.Insertar(Tecnico);
         navigationManager.NavigateTo(Urls.TecnicosIndex);
-        
+
     }
 
 }

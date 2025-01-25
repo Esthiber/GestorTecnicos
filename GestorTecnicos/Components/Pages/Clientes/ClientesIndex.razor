@@ -4,7 +4,7 @@
 @inject TecnicosService tecnicosService
 
 <PageTitle>Clientes</PageTitle>
-<h3>ClientesIndex</h3>
+<h3><i class="bi bi-people-fill"></i> Clientes</h3>
 
 <div class="container">
     <div class="card shadow-lg">
@@ -45,7 +45,7 @@
                 <div class="col-4">
                     <div class="input-group">
                         <input class="form-control" @bind="ValorFiltro" placeholder="Buscar" />
-                        <button type="button" class="btn btn-outline-primary bi bi-search" @onclick="Buscar">Search</button>
+                        <button type="button" class="btn btn-outline-primary bi bi-search" @onclick="Buscar"> Search</button>
                     </div>
                 </div>
             </div>
@@ -58,28 +58,30 @@
                         <th>Fecha Ingreso</th>
                         <th>Direccion</th>
                         <th>Limite Credito</th>
-                        <th>Tecnico</th>
+                        <th>T&eacute;cnico</th>
+                        <th class="text-center" colspan="2">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var cliente in clientes)
                     {
                         <tr>
+                            @*Detalle*@
                             <td> @cliente.ClienteId</td>
                             <td> @cliente.Nombres</td>
                             <td> @cliente.FechaIngreso</td>
                             <td> @cliente.Direccion</td>
-                            <td> @cliente.LimiteCredito</td>
+                            <td> $ @cliente.LimiteCredito</td>
                             <td> @BuscarTecnico(cliente.TecnicoId).Result.Nombres</td>
 
                             @*BTN Editar*@
                             <td class="text-center">
-                                <a href="@Urls.ClientesEditar/@cliente.ClienteId" class="btn btn-outline-primary bi bi-pencil-square">Edit</a>
+                                <a href="@Urls.ClientesEditar/@cliente.ClienteId" class="btn btn-outline-primary bi bi-pencil-square"></a>
                             </td>
 
                             @*BTN Eliminar*@
                             <td class="text-center">
-                                <button class="btn btn-outline-danger bi bi-trash" @onclick="() => Eliminar(cliente.ClienteId)">Del</button>
+                                <button class="btn btn-outline-danger bi bi-trash" @onclick="() => Eliminar(cliente.ClienteId)"></button>
                             </td>
                         </tr>
                     }

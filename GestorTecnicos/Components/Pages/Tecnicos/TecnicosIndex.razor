@@ -4,7 +4,7 @@
 @inject NavigationManager navigationManager
 @rendermode InteractiveServer
 
-<h3>Registro de T&eacute;cnicos</h3>
+<h3><i class="bi bi-person-fill-gear"></i> T&eacute;cnicos</h3>
 
 @*HTML*@
 
@@ -12,7 +12,7 @@
 <div class="container">
     <div class="card shadow-lg">
         <div class="card-header space-between">
-            <h5 class="card-title text-center">Registro de Tecnicos</h5>
+            <h5 class="card-title text-center">Registro de T&eacute;cnicos</h5>
             <a href="@Urls.TecnicosCrear" class="btn btn-primary"> <span class="bi bi-plus-square bi-trask mt-3"></span> Crear</a>
         </div>
 
@@ -48,7 +48,7 @@
                 <div class="col-4">
                     <div class="input-group">
                         <input class="form-control" @bind="ValorFiltro" placeholder="Buscar" />
-                        <button type="button" class="btn btn-outline-primary bi bi-search" @onclick="Buscar">Search</button>
+                        <button type="button" class="btn btn-outline-primary bi bi-search" @onclick="Buscar"> Search</button>
                     </div>
                 </div>
             </div>
@@ -56,27 +56,30 @@
             <table class="table table-hover">
                 <thead class="table  table-striped text-black">
                     <tr>
+                        
                         <th>TecnicoId</th>
                         <th>Nombres</th>
                         <th>Sueldo Por Hora</th>
+                        <th colspan="2" class="text-center">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var tecnico in tecnicos)
                     {
                         <tr>
+                            @*Detalle*@
                             <td> @tecnico.TecnicoId</td>
                             <td> @tecnico.Nombres</td>
-                            <td> @tecnico.SueldoHora</td>
+                            <td> $ @tecnico.SueldoHora</td>
 
                             @*BTN Editar*@
                             <td class="text-center">
-                                <a href="@Urls.TecnicosEditar/@tecnico.TecnicoId" class="btn btn-outline-primary bi bi-pencil-square">Edit</a>
+                                <a href="@Urls.TecnicosEditar/@tecnico.TecnicoId" class="btn btn-outline-primary bi bi-pencil-square"></a>
                             </td>
 
                             @*BTN Eliminar*@
                             <td class="text-center">
-                                <button class="btn btn-outline-danger bi bi-trash" @onclick="() => Eliminar(tecnico.TecnicoId)">Del</button>
+                                <button class="btn btn-outline-danger bi bi-trash" @onclick="() => Eliminar(tecnico.TecnicoId)"></button>
                             </td>
                         </tr>
                     }
@@ -85,7 +88,7 @@
         </div>
         <div class="card-footer space-between">
             <label>Tecnicos:  @tecnicos.Count()</label>
-            <label> | Pagos Por Hora Total:  @tecnicos.Sum(p => p.SueldoHora)</label>
+            <label> | Pagos Por Hora Total: $ @tecnicos.Sum(p => p.SueldoHora)</label>
         </div>
     </div>
 </div>
