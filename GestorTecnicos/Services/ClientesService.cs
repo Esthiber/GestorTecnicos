@@ -3,7 +3,6 @@ using GestorTecnicos.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-
 namespace GestorTecnicos.Services
 {
     public class ClientesService(IDbContextFactory<Contexto> Dbfactory)
