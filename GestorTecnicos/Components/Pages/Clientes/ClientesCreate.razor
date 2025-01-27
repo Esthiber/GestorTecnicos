@@ -1,6 +1,7 @@
 ﻿@page "/clientes/create"
 @inject ClientesService clientesService
 @inject TecnicosService tecnicosService
+@inject CiudadesService ciudadesService
 @rendermode InteractiveServer
 @inject NavigationManager navigationManager
 
@@ -22,24 +23,28 @@
                     <label class="form-label"><strong>ClienteId</strong></label>
                     <InputNumber class="form-control" @bind-Value="cliente.ClienteId" readonly />
                 </div>
+                
                 @*FechaIngreso*@
                 <div class="mb-3">
                     <label class="form-label"><strong>FechaIngreso</strong></label>
                     <InputDate class="form-control" @bind-Value="cliente.FechaIngreso" readonly />
                 </div>
+                
                 @*Nombres*@
                 <div class="mb-3">
-                    
+
                     <label class="form-label"><strong>Nombres</strong></label>
                     <InputText class="form-control" @bind-Value="cliente.Nombres" />
                     <ValidationMessage For="@(() => cliente.Nombres)" />
                 </div>
+                
                 @*Direccion*@
                 <div class="mb-3">
                     <label class="form-label"><strong>Direcci&oacute;n</strong></label>
                     <InputText class="form-control" @bind-Value="cliente.Direccion" />
                     <ValidationMessage For="@(() => cliente.Direccion)" />
                 </div>
+               
                 @*RNC*@
                 <div class="mb-3">
                     <label class="form-label
@@ -47,6 +52,7 @@
                     <InputText class="form-control" @bind-Value="cliente.Rnc" />
                     <ValidationMessage For="@(() => cliente.Rnc)" />
                 </div>
+                
                 @*LimiteCredito*@
                 <div class="mb-3">
                     <label class="form-label"><strong>Limite Credito</strong></label>
@@ -67,6 +73,21 @@
                         }
                     </InputSelect>
                 </div>
+
+                @*Ciudad*@
+                <div class="mb-3">
+                    <label class="form-label"><strong>Ciudad</strong></label>
+                    <InputSelect class="form-control" @bind-Value="cliente.CiudadId">
+
+                        <option value="0" selected disabled>Elija una Ciudad</option>
+
+                        @foreach (var ciudad in listaCiudades)
+                        {
+                            <option value="@ciudad.CiudadId">@ciudad.Nombre</option>
+                        }
+                    </InputSelect>
+                </div>
+
             </div>
 
             @*Footer*@
@@ -84,6 +105,7 @@
 
     List<Tecnicos> listaTecnicos = new();
     List<Clientes> listaClientes = new();
+    List<Ciudades> listaCiudades = new();
 
     public string errorLabel = "";
 
@@ -91,6 +113,7 @@
     {
         listaTecnicos = await tecnicosService.Listar((t) => t.TecnicoId > 0);
         listaClientes = await clientesService.Listar((c) => c.ClienteId > 0);
+        listaCiudades = await ciudadesService.Listar((c) => c.CiudadId > 0);
         cliente.FechaIngreso = DateTime.Now;
     }
 
@@ -102,7 +125,7 @@
     {
         return listaClientes.Count(c => c.Nombres == Nombre) > 0;
     }
-   
+
     private async Task Guardar()
     {
         if (await ComprobarNombre(cliente.Nombres))

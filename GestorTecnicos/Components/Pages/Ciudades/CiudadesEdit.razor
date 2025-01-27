@@ -1,0 +1,57 @@
+﻿@page "/ciudades/edit/{CiudadId:int}"
+@using Microsoft.AspNetCore.Components.Forms
+@inject CiudadesService ciudadesService
+@inject NavigationManager navigationManager
+@rendermode InteractiveServer
+
+<h3>CiudadesEdit</h3>
+<PageTitle>Editar Ciudad</PageTitle>
+<EditForm Model="Ciudad" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+
+    <div class="container">
+        <div class="card shadow-lg">
+            <div class="card-header text-center">
+                <h5 class="card-title">Editar Ciudad</h5>
+            </div>
+
+            <div class="card-body">
+                @*CiudadId*@
+                <div class="mb-3">
+                    <label class="form-label"><strong>CiudadId</strong></label>
+                    <InputNumber class="form-control" @bind-Value="Ciudad.CiudadId" readonly />
+                </div>
+                @*Nombres*@
+                <div class="mb-3">
+                    <label class="form-label"><strong>Nombres</strong></label>
+                    <InputText class="form-control" @bind-Value="Ciudad.Nombre" />
+                    <ValidationMessage For="@(() => Ciudad.Nombre)" />
+                </div>    
+            </div>
+
+            @*Footer*@
+            <div class="card-footer text-center mt-2">
+                <a href="@Urls.TecnicosIndex" class="btn-secondary"><span class="bi bi-arrow-left"></span>Volver</a>
+                <button type="submit" class="btn btn-primary bi bi-floppy">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+</EditForm>
+
+@code {
+    [Parameter] public int CiudadId { get; set; }
+    public Ciudades Ciudad { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Ciudad = await ciudadesService.Buscar(CiudadId);
+    }
+
+    private async Task Guardar()
+    {
+        await ciudadesService.Guardar(Ciudad);
+        navigationManager.NavigateTo(Urls.CiudadesIndex);
+
+    }
+}

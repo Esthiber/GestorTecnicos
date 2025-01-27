@@ -1,0 +1,116 @@
+﻿@page "/Ciudades"
+@using Microsoft.AspNetCore.Components.Forms
+@inject CiudadesService ciudadesService
+@inject NavigationManager navigationManager
+@rendermode InteractiveServer
+
+<h3>CiudadesIndex</h3>
+
+<PageTitle>Lista de Ciudades</PageTitle>
+<div class="container">
+    <div class="card shadow-lg">
+        <div class="card-header space-between">
+            <h5 class="card-title text-center">Registro de T&eacute;cnicos</h5>
+            <a href="@Urls.CiudadesCrear" class="btn btn-primary"> <span class="bi bi-plus-square bi-trask mt-3"></span> Crear</a>
+        </div>
+
+        <div class="card-body">
+
+            @*labels*@
+            <div class="row">
+
+                @*Filtrar por*@
+                <div class="col-3">
+                    <label class="col-form-label"><strong>Filtrar por</strong></label>
+                </div>
+
+                @*ValorFiltro*@
+                <div class="col-4">
+                    <label class="col-form-label"><strong>B&uacute;squeda</strong></label>
+                </div>
+            </div>
+
+            @*Inputs y botones*@
+            <div class="row align-items-center">
+                @*filtro*@
+                <div class="col-3">
+                    <InputSelect class="form-select" @bind-Value="Filtro">
+                        <option value="" selected disabled>Elija una opci&oacute;n</option>
+                        <option value="Id">Id</option>
+                        <option value="Nombre">Nombre</option>
+                    </InputSelect>
+                </div>
+
+                @*Busqueda*@
+                <div class="col-4">
+                    <div class="input-group">
+                        <input class="form-control" @bind="ValorFiltro" placeholder="Buscar" />
+                        <button type="button" class="btn btn-outline-primary bi bi-search" @onclick="Buscar"> Search</button>
+                    </div>
+                </div>
+            </div>
+
+            <table class="table table-hover">
+                <thead class="table  table-striped text-black">
+                    <tr>
+
+                        <th>CiudadId</th>
+                        <th>Nombre</th>
+                        <th colspan="2" class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var ciudad in ciudades)
+                    {
+                        <tr>
+                            @*Detalle*@
+                            <td> @ciudad.CiudadId</td>
+                            <td> @ciudad.Nombre</td>
+
+                            @*BTN Editar*@
+                            <td class="text-center">
+                                <a href="@Urls.CiudadesEditar/@ciudad.CiudadId" class="btn btn-outline-primary bi bi-pencil-square"></a>
+                            </td>
+
+                            @*BTN Eliminar*@
+                            <td class="text-center">
+                                <button class="btn btn-outline-danger bi bi-trash" @onclick="() => Eliminar(ciudad.CiudadId)"></button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer space-between">
+            <label>Tecnicos:  @ciudades.Count()</label>
+        </div>
+    </div>
+</div>
+
+@code {
+    List<Ciudades> ciudades = new();
+    public string Filtro { get; set; } = string.Empty;
+    public string ValorFiltro { get; set; } = string.Empty;
+    protected override async Task OnInitializedAsync()
+    {
+        ciudades = await ciudadesService.Listar(c => c.CiudadId > 0);
+    }
+
+    private async Task Buscar()
+    {
+        if (string.IsNullOrEmpty(ValorFiltro))
+        {
+            ciudades = await ciudadesService.Listar(c => c.CiudadId > 0);
+        }
+        else
+        {
+            ciudades = await ciudadesService.Listar(c => c.Nombre.Contains(ValorFiltro));
+        }
+    }
+
+    private async Task Eliminar(int id)
+    {
+        await ciudadesService.Eliminar(id);
+        ciudades = await ciudadesService.Listar(c => c.CiudadId > 0);
+    }
+}

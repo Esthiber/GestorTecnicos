@@ -1,0 +1,55 @@
+﻿@page "/ciudades/create"
+@inject CiudadesService ciudadesService
+@rendermode InteractiveServer
+@inject NavigationManager navigationManager
+
+<h3>CiudadesCreate</h3>
+
+<PageTitle>Crear Ciudad</PageTitle>
+<EditForm Model="ciudad" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+
+    <div class="container">
+        <div class="card shadow-lg">
+            <div class="card-header text-center">
+                <h5 class="card-title">Crear T&eacute;cnico <i class="bi bi-person-fill-gear"></i></h5>
+            </div>
+
+            <div class="card-body">
+                @*CiudadId*@
+                <div class="mb-3">
+                    <label class="form-label"><strong>CiudadId</strong></label>
+                    <InputNumber class="form-control" @bind-Value="ciudad.CiudadId" readonly />
+                </div>
+                @*Nombres*@
+                <div class="mb-3">
+                    <label class="form-label"><strong>Nombre</strong></label>
+                    <InputText class="form-control" @bind-Value="ciudad.Nombre" />
+                    <ValidationMessage For="@(() => ciudad.Nombre)" />
+                </div>
+      
+            </div>
+
+            @*Footer*@
+            <div class="card-footer text-center mt-2">
+                <a href="@Urls.TecnicosIndex" class="btn btn-secondary">
+                    <span class="bi bi-arrow-left"></span> Volver
+                </a>
+                <button type="submit" class="btn btn-primary bi bi-floppy"> Guardar</button>
+            </div>
+        </div>
+    </div>
+
+</EditForm>
+
+
+@code {
+    Ciudades ciudad = new Ciudades();
+
+    private async Task Guardar()
+    {
+        await ciudadesService.Guardar(ciudad);
+        navigationManager.NavigateTo(Urls.CiudadesIndex);
+    }
+
+}

@@ -2,6 +2,7 @@
 @rendermode InteractiveServer
 @inject ClientesService clientesService
 @inject TecnicosService tecnicosService
+@inject CiudadesService ciudadesService
 
 <PageTitle>Clientes</PageTitle>
 <h3><i class="bi bi-people-fill"></i> Clientes</h3>
@@ -38,6 +39,7 @@
                         <option value="Id">Id</option>
                         <option value="Nombres">Nombres</option>
                         <option value="Rnc">RNC</option>
+                        <option value="Direccion">Direcci&oacute;</option>
                     </InputSelect>
                 </div>
 
@@ -57,8 +59,10 @@
                         <th>Nombres</th>
                         <th>Fecha Ingreso</th>
                         <th>Direccion</th>
+                        <th>Rnc</th>
                         <th>Limite Credito</th>
                         <th>T&eacute;cnico</th>
+                        <th>Ciudad</th>
                         <th class="text-center" colspan="2">Acciones</th>
                     </tr>
                 </thead>
@@ -71,8 +75,10 @@
                             <td> @cliente.Nombres</td>
                             <td> @cliente.FechaIngreso</td>
                             <td> @cliente.Direccion</td>
+                            <td> @cliente.Rnc</td>
                             <td> $ @cliente.LimiteCredito</td>
                             <td> @BuscarTecnico(cliente.TecnicoId).Result.Nombres</td>
+                            <td> @BuscarCiudad(cliente.CiudadId).Result.Nombre</td>
 
                             @*BTN Editar*@
                             <td class="text-center">
@@ -101,10 +107,12 @@
 
     List<Clientes> listaClientes = new();
     List<Tecnicos> listaTecnicos = new();
+    List<Ciudades> listaCiudades = new();
     protected override async Task OnInitializedAsync()
     {
         listaClientes = await clientesService.Listar((c) => c.ClienteId > 0);
         listaTecnicos = await tecnicosService.Listar((t) => t.TecnicoId > 0);
+        listaCiudades = await ciudadesService.Listar((c) => c.CiudadId > 0);
 
         Tecnicos tecnicos = await BuscarTecnico(1);
     }
@@ -134,6 +142,15 @@
         t.Nombres = "No asignado";
 
         return t;
+    }
+
+    private async Task<Ciudades> BuscarCiudad(int id)
+    {
+        Ciudades? c = listaCiudades.Find(c => c.CiudadId == id);
+        if (c != null) return c;
+        c = new Ciudades();
+        c.Nombre = "No asignado";
+        return c;
     }
 
     private async Task Eliminar(int id)
