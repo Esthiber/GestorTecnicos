@@ -1,6 +1,7 @@
 ﻿@page "/clientes/edit/{ClienteId:int}"
 @inject ClientesService clientesService
 @inject TecnicosService tecnicosService
+@inject CiudadesService ciudadesService
 @rendermode InteractiveServer
 @inject NavigationManager navigationManager
 
@@ -64,6 +65,18 @@
                         }
                     </InputSelect>
                 </div>
+
+                @*Ciudad*@
+                <div class="mb-3">
+                    <label class="form-label"><strong>Ciudad</strong></label>
+                    <InputSelect class="form-control" @bind-Value="cliente.CiudadId">
+                        <option value="" selected disabled>Elija una Ciudad</option>
+                        @foreach (var ciudad in ciudades)
+                        {
+                            <option value="@ciudad.CiudadId">@ciudad.Nombre</option>
+                        }
+                    </InputSelect>
+                </div>
             </div>
 
             @*Footer*@
@@ -81,12 +94,14 @@
     [Parameter] public int ClienteId { get; set; }
 
     List<Tecnicos> tecnicos = new();
+    List<Ciudades> ciudades = new();    
 
     public string existeNombreLabel = "";
 
     protected override async Task OnInitializedAsync()
     {
         tecnicos = await tecnicosService.Listar((t) => t.TecnicoId > 0);
+        ciudades = await ciudadesService.Listar((c) => c.CiudadId > 0);
         cliente = await clientesService.Buscar(ClienteId);
     }
 
