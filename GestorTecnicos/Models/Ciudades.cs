@@ -5,9 +5,9 @@ namespace GestorTecnicos.Models
     public class Ciudades
     {
         [Key]
-        private int CiudadId { get; set; }
+        public int CiudadId { get; set; }
         [Required(ErrorMessage="Debe ingresar el nombre de ciudad.")]
         [RegularExpression(@"^(?!\s*$).{2,}$", ErrorMessage = "El nombre debe tener al menos 2 caracteres y no puede contener solo espacios en blanco.")]
-        private string? Nombre { get; set; }
+        public string? Nombre { get; set; }
     }
 }
