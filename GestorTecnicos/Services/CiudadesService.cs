@@ -7,6 +7,14 @@ namespace GestorTecnicos.Services
 {
     public class CiudadesService(IDbContextFactory<Contexto> Dbfactory)
     {
+        public async Task<bool> Guardar(Ciudades ciudad)
+        {
+            if (ciudad.CiudadId == 0)
+                return await Insertar(ciudad);
+            else
+                return await Modificar(ciudad);
+        }
+
         public async Task<bool> Insertar(Ciudades ciudad)
         {
             await using var contexto = await Dbfactory.CreateDbContextAsync();
