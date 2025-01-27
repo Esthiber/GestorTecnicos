@@ -29,5 +29,9 @@ namespace GestorTecnicos.Models
         [Range(minimum: 1, int.MaxValue, ErrorMessage = "Por favor, seleccione un tecnico.")]
         public int TecnicoId { get; set; }
 
+        [Required(ErrorMessage = "La Ciudad es Requerida")]
+        [Range(minimum: 1, int.MaxValue, ErrorMessage = "Por favor, seleccione una ciudad.")]
+        public int CiudadId { get; set; }
+
     }
 }
