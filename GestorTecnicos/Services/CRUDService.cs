@@ -9,7 +9,7 @@ namespace GestorTecnicos.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<T?> Buscar(int id)
+        public virtual async Task<T?> Buscar(int id)
         {
             Console.WriteLine($"Buscando entidad de tipo {typeof(T).Name}");
             return await Task.FromResult(default(T));
@@ -20,7 +20,7 @@ namespace GestorTecnicos.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<bool> Eliminar(int id)
+        public virtual async Task<bool> Eliminar(int id)
         {
             Console.WriteLine($"Eliminando entidad de tipo {typeof(T).Name}");
             return await Task.FromResult(true);
@@ -31,7 +31,7 @@ namespace GestorTecnicos.Services
         /// </summary>
         /// <param name="entidad"></param>
         /// <returns></returns>
-        public async Task<bool> Guardar(T entidad)
+        public virtual async Task<bool> Guardar(T entidad)
         {
             Console.WriteLine($"Guardando entidad de tipo {typeof(T).Name}");
             return await Task.FromResult(true);
@@ -42,7 +42,7 @@ namespace GestorTecnicos.Services
         /// </summary>
         /// <param name="entidad"></param>
         /// <returns></returns>
-        public async Task<bool> Insertar(T entidad)
+        public virtual async Task<bool> Insertar(T entidad)
         {
             Console.WriteLine($"Insertando entidad de tipo {typeof(T).Name}");
             return await Task.FromResult(true);
@@ -53,7 +53,7 @@ namespace GestorTecnicos.Services
         /// </summary>
         /// <param name="criterio"></param>
         /// <returns></returns>
-        public async Task<List<T>> Listar(Expression<Func<T, bool>> criterio)
+        public virtual async Task<List<T>> Listar(Expression<Func<T, bool>> criterio)
         {
             Console.WriteLine($"Listando entidades de tipo {typeof(T).Name}");
             return await Task.FromResult(new List<T>());
@@ -64,7 +64,7 @@ namespace GestorTecnicos.Services
         /// </summary>
         /// <param name="entidad"></param>
         /// <returns></returns>
-        public async Task<bool> Modificar(T entidad)
+        public virtual async Task<bool> Modificar(T entidad)
         {
             Console.WriteLine($"Modificando entidad de tipo {typeof(T).Name}");
             return await Task.FromResult(true);
