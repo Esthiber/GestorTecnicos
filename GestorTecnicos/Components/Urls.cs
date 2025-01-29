@@ -14,5 +14,9 @@
         public static string CiudadesIndex => "/ciudades"; // URL de la página de inicial de la lista de ciudades
         public static string CiudadesCrear => "/ciudades/create";
         public static string CiudadesEditar => "/ciudades/edit";
+
+        public static string TicketsIndex => "/tickets"; // URL de la página de inicial de la lista de tickets
+        public static string TicketsCrear => "/tickets/create";
+        public static string TicketsEditar => "/tickets/edit";
     }
 }
