@@ -15,9 +15,11 @@ namespace GestorTecnicos.Models
         public int Prioridad { get; set; }
 
         [Required(ErrorMessage = "Seleccione el Cliente")]
+        [Range(1, int.MaxValue, ErrorMessage = "Seleccione el Cliente")]
         public int ClienteId { get; set; }
 
         [Required(ErrorMessage = "Seleccione el Técnico")]
+        [Range(1, int.MaxValue, ErrorMessage = "Seleccione el Técnico")]
         public int TecnicoId { get; set; }
 
         [Required(ErrorMessage = "Describa el Asunto")]
