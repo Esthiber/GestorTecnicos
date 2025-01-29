@@ -56,22 +56,32 @@
             <table class="table table-hover">
                 <thead class="table table-striped text-black">
                     <tr>
-                        @foreach (var t in typeof(Tickets).GetProperties())
-                        {
-                            <th>@t.Name</th>
-                        }
+                        <th>TicketId</th>
+                        <th>Fecha</th>
+                        <th>Prioridad</th>
+                        <th>ClienteId</th>
+                        <th>TecnicoId</th>
+                        <th>Asunto</th>
+                        <th>Descripcion</th>
+                        <th>TiempoInvertido</th>
                         <th class="text-center" colspan="2">Acciones</th>
                     </tr>
 
                 </thead>
                 <tbody>
+
+
                     @foreach (var ticket in listaTickets)
                     {
                         <tr>
-                            @foreach (var t in typeof(Tickets).GetProperties())
-                            {
-                                <td>@t.GetValue(ticket)</td>
-                            }
+                            <td>@ticket.TicketId</td>
+                            <td>@ticket.Fecha</td>
+                            <td>@ticket.Prioridad</td>
+                            <td>@ticket.ClienteId</td>
+                            <td>@ticket.TecnicoId</td>
+                            <td>@ticket.Asunto</td>
+                            <td>@ticket.Descripcion</td>
+                            <td>@ticket.TiempoInvertido</td>
                             <td class="text-center">
                                 <a href="@Urls.TicketsEditar/ticket.TicketId" class="btn btn-primary">Editar</a>
                             </td>
@@ -100,12 +110,22 @@
     public List<Tecnicos> listaTecnicos { get; set; } = new List<Tecnicos>();
     public List<Clientes> listaClientes { get; set; } = new List<Clientes>();
 
+    protected override async Task OnInitializedAsync()
+    {
+        listaTickets = await ticketsService.Listar(t => t.TicketId > 0);
+        listaClientes = await clientesService.Listar(c => c.ClienteId > 0);
+        listaTecnicos = await tecnicosService.Listar(t => t.TecnicoId > 0);
+    }
+
     @*TODO*@
     private async Task Buscar()
     {
-        if(Filtro == "Id"){
+        if (Filtro == "Id")
+        {
             listaTickets = await ticketsService.Listar(t => t.TicketId.ToString().Contains(ValorFiltro));
-        }else if(Filtro == "Asunto"){
+        }
+        else if (Filtro == "Asunto")
+        {
             listaTickets = await ticketsService.Listar(t => t.Asunto.Contains(ValorFiltro));
         }
 
