@@ -15,5 +15,7 @@ namespace GestorTecnicos.Services
 
         Task<bool> Guardar(T entidad);
 
+        Task<bool> Existe(int id);
+
     }
 }
