@@ -5,9 +5,9 @@ using System.Linq.Expressions;
 
 namespace GestorTecnicos.Services
 {
-    public class TecnicosService(IDbContextFactory<Contexto> Dbfactory)
+    public class TecnicosService(IDbContextFactory<Contexto> Dbfactory) : CRUDService<Tecnicos>
     {
-        public async Task<bool> Guardar(Tecnicos tecnico)
+        public override async Task<bool> Guardar(Tecnicos tecnico)
         {
             if (!await Existe(tecnico))
             {
@@ -26,7 +26,7 @@ namespace GestorTecnicos.Services
                 AnyAsync(t => t.TecnicoId == tecnico.TecnicoId);
         }
 
-        public async Task<bool> Insertar(Tecnicos tecnico)
+        public override async Task<bool> Insertar(Tecnicos tecnico)
         {
             if (!await Existe(tecnico))
             {
@@ -42,21 +42,21 @@ namespace GestorTecnicos.Services
             }
         }
 
-        public async Task<bool> Modificar(Tecnicos tecnico)
+        public override async Task<bool> Modificar(Tecnicos tecnico)
         {
             await using var contexto = await Dbfactory.CreateDbContextAsync();
             contexto.Tecnicos.Update(tecnico);
             return await contexto.SaveChangesAsync() > 0;
         }
 
-        public async Task<Tecnicos?> Buscar(int id)
+        public override async Task<Tecnicos?> Buscar(int id)
         {
             await using var contexto = await Dbfactory.CreateDbContextAsync();
             return await contexto.Tecnicos
                 .FirstOrDefaultAsync(t => t.TecnicoId == id);
         }
 
-        public async Task<bool> Eliminar(int id)
+        public override async Task<bool> Eliminar(int id)
         {
             await using var contexto = await Dbfactory.CreateDbContextAsync();
             return await contexto.Tecnicos
@@ -72,7 +72,7 @@ namespace GestorTecnicos.Services
                 .AnyAsync(t => t.Nombres == nombres);
         }
 
-        public async Task<List<Tecnicos>> Listar(Expression<Func<Tecnicos, bool>> criterio)
+        public override async Task<List<Tecnicos>> Listar(Expression<Func<Tecnicos, bool>> criterio)
         {
             await using var contexto = await Dbfactory.CreateDbContextAsync();
             return await contexto.Tecnicos
@@ -80,7 +80,7 @@ namespace GestorTecnicos.Services
                 .AsNoTracking()
                 .ToListAsync();
         }
-    
+
 
     }
 }
