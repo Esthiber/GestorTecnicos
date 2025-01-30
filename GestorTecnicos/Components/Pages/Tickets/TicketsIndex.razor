@@ -35,11 +35,10 @@
                 <div class="col-3">
                     <InputSelect class="form-select" @bind-Value="Filtro">
                         <option value="" selected disabled>Elija una opci&oacute;n</option>
-
-                        @foreach (var t in typeof(Tickets).GetProperties())
-                        {
-                            <option value="@t.Name">@t.Name</option>
-                        }
+                        <option value="Id">Id</option>
+                        <option value="Asunto">Asunto</option>
+                        <option value="Cliente">Cliente</option>
+                        <option value="Tecnico">Tecnico</option>
 
                     </InputSelect>
                 </div>
@@ -79,7 +78,7 @@
                             <td>@ticket.Descripcion</td>
                             <td>@ticket.TiempoInvertido</td>
                             <td class="text-center">
-                                <a href="@Urls.TicketsEditar/ticket.TicketId" class="btn btn-primary">Editar</a>
+                                <a href="@Urls.TicketsEditar/@ticket.TicketId" class="btn btn-primary">Editar</a>
                             </td>
                             <td class="text-center">
                                 <button class="btn btn-danger" @onclick="() => Eliminar(ticket.TicketId)">Eliminar</button>
@@ -116,6 +115,9 @@
     @*TODO*@
     private async Task Buscar()
     {
+        if(Filtro == string.Empty){
+            await Refresh();
+        }
         if (Filtro == "Id")
         {
             listaTickets = await ticketsService.Listar(t => t.TicketId.ToString().Contains(ValorFiltro));
@@ -123,9 +125,26 @@
         else if (Filtro == "Asunto")
         {
             listaTickets = await ticketsService.Listar(t => t.Asunto.Contains(ValorFiltro));
+        }else if(Filtro == "Cliente"){
+            listaTickets = await ticketsService.Listar(t => listaClientes.Find(c => c.Nombres == ValorFiltro).ClienteId == t.ClienteId);
+        }
+        else if (Filtro == "Tecnico")
+        {
+            listaTickets = await ticketsService.Listar(t => listaTecnicos.Find(c => c.Nombres == ValorFiltro).TecnicoId == t.TecnicoId); 
+        else
+        {
+            Refresh();
         }
 
     }
+
+    private async Task Refresh()
+    {
+        listaTickets = await ticketsService.Listar(t => t.TicketId > 0);
+        listaClientes = await clientesService.Listar(c => c.ClienteId > 0);
+        listaTecnicos = await tecnicosService.Listar(t => t.TecnicoId > 0);
+    }
+}
 
     private async Task Eliminar(int ticketId)
     {
