@@ -1,8 +1,8 @@
 ﻿@page "/tickets"
-@rendermode InteractiveServer
 @inject ClientesService clientesService
 @inject TecnicosService tecnicosService
 @inject TicketsService ticketsService
+@rendermode InteractiveServer
 
 <PageTitle>Tickets</PageTitle>
 <h3><i class="bi bi-people-fill"></i> Tickets</h3>
@@ -113,9 +113,10 @@
     }
 
     @*TODO*@
-    private async Task Buscar()
+    public async Task Buscar()
     {
-        if(Filtro == string.Empty){
+        if (Filtro == string.Empty)
+        {
             await Refresh();
         }
         if (Filtro == "Id")
@@ -125,12 +126,15 @@
         else if (Filtro == "Asunto")
         {
             listaTickets = await ticketsService.Listar(t => t.Asunto.Contains(ValorFiltro));
-        }else if(Filtro == "Cliente"){
+        }
+        else if (Filtro == "Cliente")
+        {
             listaTickets = await ticketsService.Listar(t => listaClientes.Find(c => c.Nombres == ValorFiltro).ClienteId == t.ClienteId);
         }
         else if (Filtro == "Tecnico")
         {
-            listaTickets = await ticketsService.Listar(t => listaTecnicos.Find(c => c.Nombres == ValorFiltro).TecnicoId == t.TecnicoId); 
+            listaTickets = await ticketsService.Listar(t => listaTecnicos.Find(c => c.Nombres == ValorFiltro).TecnicoId == t.TecnicoId);
+        }
         else
         {
             Refresh();
@@ -138,13 +142,12 @@
 
     }
 
-    private async Task Refresh()
+    public async Task Refresh()
     {
         listaTickets = await ticketsService.Listar(t => t.TicketId > 0);
         listaClientes = await clientesService.Listar(c => c.ClienteId > 0);
         listaTecnicos = await tecnicosService.Listar(t => t.TecnicoId > 0);
     }
-}
 
     private async Task Eliminar(int ticketId)
     {
