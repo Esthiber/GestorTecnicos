@@ -63,7 +63,7 @@ namespace GestorTecnicos.Services
         /// </summary>
         /// <param name="Id"></param>
         /// <returns>Si existe</returns>
-        public async Task<bool> Existe(int id)
+        public override async Task<bool> Existe(int id)
         {
             await using var contexto = await Dbfactory.CreateDbContextAsync();
             return await contexto.Clientes.
