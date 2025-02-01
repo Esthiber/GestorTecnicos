@@ -28,6 +28,7 @@ namespace GestorTecnicos.Models
         public string? Descripcion { get; set; }
 
         [Required(ErrorMessage = "Ingrese el Tiempo Invertido")]
+        [Range(1, int.MaxValue, ErrorMessage = "El Tiempo Invertido debe ser mayor a 0")]
         public int TiempoInvertido { get; set; }
 
     }

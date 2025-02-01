@@ -71,7 +71,7 @@
                         <tr>
                             <td>@ticket.TicketId</td>
                             <td>@ticket.Fecha</td>
-                            <td>@ticket.Prioridad</td>
+                            <td>@prioridades[ticket.Prioridad - 1]</td>
                             <td>@listaClientes.Find(c => c.ClienteId == ticket.ClienteId)?.Nombres</td>
                             <td>@listaTecnicos.Find(t => t.TecnicoId == ticket.TecnicoId)?.Nombres</td>
                             <td>@ticket.Asunto</td>
@@ -104,6 +104,8 @@
     public List<Tickets> listaTickets { get; set; } = new List<Tickets>();
     public List<Tecnicos> listaTecnicos { get; set; } = new List<Tecnicos>();
     public List<Clientes> listaClientes { get; set; } = new List<Clientes>();
+
+    public List<string> prioridades = new List<string> { "Baja", "Media", "Alta", "Urgente" };
 
     protected override async Task OnInitializedAsync()
     {
