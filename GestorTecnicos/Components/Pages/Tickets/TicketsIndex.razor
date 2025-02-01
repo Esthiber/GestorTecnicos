@@ -77,11 +77,15 @@
                             <td>@ticket.Asunto</td>
                             <td>@ticket.Descripcion</td>
                             <td>@ticket.TiempoInvertido</td>
+
+                            @*BTN Editar*@
                             <td class="text-center">
-                                <a href="@Urls.TicketsEditar/@ticket.TicketId" class="btn btn-primary">Editar</a>
+                                <a href="@Urls.TicketsEditar/@ticket.TicketId" class="btn btn-outline-primary bi bi-pencil-square"></a>
                             </td>
+
+                            @*BTN Eliminar*@
                             <td class="text-center">
-                                <button class="btn btn-danger" @onclick="() => Eliminar(ticket.TicketId)">Eliminar</button>
+                                <button class="btn btn-outline-danger bi bi-trash" @onclick="() => Eliminar(ticket.TicketId)"></button>
                             </td>
                         </tr>
                     }
