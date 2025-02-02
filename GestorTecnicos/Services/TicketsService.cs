@@ -5,54 +5,53 @@ using System.Linq.Expressions;
 
 namespace GestorTecnicos.Services
 {
-    public class CiudadesService(IDbContextFactory<Contexto> Dbfactory) : CRUDService<Ciudades>
+    public class TicketsService(IDbContextFactory<Contexto> Dbfactory) : CRUDService<Tickets>
     {
-        public override async Task<bool> Guardar(Ciudades ciudad)
+        public override async Task<bool> Insertar(Tickets entidad)
         {
-            if (ciudad.CiudadId == 0)
-                return await Insertar(ciudad);
-            else
-                return await Modificar(ciudad);
+            await using var contexto = await Dbfactory.CreateDbContextAsync();
+            contexto.Tickets.Add(entidad);
+            return await contexto.SaveChangesAsync() > 0;
         }
 
-        public override async Task<bool> Insertar(Ciudades ciudad)
+        public override async Task<bool> Modificar(Tickets entidad)
         {
             await using var contexto = await Dbfactory.CreateDbContextAsync();
-            contexto.Ciudades.Add(ciudad);
+            contexto.Tickets.Update(entidad);
             return await contexto.SaveChangesAsync() > 0;
         }
-        
-        public override async Task<bool> Modificar(Ciudades ciudad)
-        {
-            await using var contexto = await Dbfactory.CreateDbContextAsync();
-            contexto.Ciudades.Update(ciudad);
-            return await contexto.SaveChangesAsync() > 0;
-        }
-       
+
         public override async Task<bool> Eliminar(int id)
         {
             await using var contexto = await Dbfactory.CreateDbContextAsync();
-            return await contexto.Ciudades
+            return await contexto.Tickets
                 .AsNoTracking()
-                .Where(c => c.CiudadId == id)
+                .Where(t => t.TicketId == id)
                 .ExecuteDeleteAsync() > 0;
         }
 
-        public override async Task<Ciudades?> Buscar(int id)
+        public override async Task<Tickets?> Buscar(int id)
         {
             await using var contexto = await Dbfactory.CreateDbContextAsync();
-            return await contexto.Ciudades
-                .FirstOrDefaultAsync(c => c.CiudadId == id);
+            return await contexto.Tickets
+                .FirstOrDefaultAsync(t => t.TicketId == id);
         }
 
-        public override async Task<List<Ciudades>> Listar(Expression<Func<Ciudades, bool>> criterio)
+        public override async Task<List<Tickets>> Listar(Expression<Func<Tickets, bool>> criterio)
         {
             await using var contexto = await Dbfactory.CreateDbContextAsync();
-            return await contexto.Ciudades
+            return await contexto.Tickets
                 .Where(criterio)
                 .AsNoTracking()
                 .ToListAsync();
         }
-   
+    
+        public override async Task<bool> Guardar(Tickets entidad)
+        {
+            if (entidad.TicketId == 0)
+                return await Insertar(entidad);
+            else
+                return await Modificar(entidad);
+        }
     }
 }

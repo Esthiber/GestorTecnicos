@@ -1,0 +1,167 @@
+﻿@page "/tickets"
+@inject ClientesService clientesService
+@inject TecnicosService tecnicosService
+@inject TicketsService ticketsService
+@rendermode InteractiveServer
+
+<PageTitle>Tickets</PageTitle>
+<h3><i class="bi bi-people-fill"></i> Tickets</h3>
+
+<div class="container">
+    <div class="card shadow-lg">
+        <div class="card-header">
+            <h5 class="card-title text-center">Registro Tickets</h5>
+            <a href="@Urls.TicketsCrear" class="btn btn-primary"> <span class="bi bi-plus-square bi-trask mt-3"></span> Crear</a>
+        </div>
+
+        <div class="card-body">
+            @*labels*@
+            <div class="row">
+
+                @*Filtrar por*@
+                <div class="col-3">
+                    <label class="col-form-label"><strong>Filtrar por</strong></label>
+                </div>
+
+                @*ValorFiltro*@
+                <div class="col-4">
+                    <label class="col-form-label"><strong>B&uacute;squeda</strong></label>
+                </div>
+            </div>
+
+            @*Inputs y botones*@
+            <div class="row align-items-center">
+                @*filtro*@
+                <div class="col-3">
+                    <InputSelect class="form-select" @bind-Value="Filtro">
+                        <option value="" selected disabled>Elija una opci&oacute;n</option>
+                        <option value="Id">Id</option>
+                        <option value="Asunto">Asunto</option>
+                        <option value="Cliente">Cliente</option>
+                        <option value="Tecnico">Tecnico</option>
+
+                    </InputSelect>
+                </div>
+                @*Busqueda*@
+                <div class="col-4">
+                    <div class="input-group">
+                        <input class="form-control" @bind="ValorFiltro" placeholder="Buscar" />
+                        <button type="button" class="btn btn-outline-primary bi bi-search" @onclick="Buscar"> Search</button>
+                    </div>
+                </div>
+            </div>
+
+            <table class="table table-hover">
+                <thead class="table table-striped text-black">
+                    <tr>
+                        <th>TicketId</th>
+                        <th>Fecha</th>
+                        <th>Prioridad</th>
+                        <th>Cliente</th>
+                        <th>Tecnico</th>
+                        <th>Asunto</th>
+                        <th>Descripci&oacute;n</th>
+                        <th>TiempoInvertido</th>
+                        <th class="text-center" colspan="2">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var ticket in listaTickets)
+                    {
+                        <tr>
+                            <td>@ticket.TicketId</td>
+                            <td>@ticket.Fecha</td>
+                            <td>@prioridades[ticket.Prioridad - 1]</td>
+                            <td>@listaClientes.Find(c => c.ClienteId == ticket.ClienteId)?.Nombres</td>
+                            <td>@listaTecnicos.Find(t => t.TecnicoId == ticket.TecnicoId)?.Nombres</td>
+                            <td>@ticket.Asunto</td>
+                            <td>@ticket.Descripcion</td>
+                            <td>@ticket.TiempoInvertido</td>
+
+                            @*BTN Editar*@
+                            <td class="text-center">
+                                <a href="@Urls.TicketsEditar/@ticket.TicketId" class="btn btn-outline-primary bi bi-pencil-square"></a>
+                            </td>
+
+                            @*BTN Eliminar*@
+                            <td class="text-center">
+                                <button class="btn btn-outline-danger bi bi-trash" @onclick="() => Eliminar(ticket.TicketId)"></button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
+
+        <div class="card-footer">
+            <label>Tickets: @listaTickets.Count</label>
+        </div>
+
+    </div>
+</div>
+
+@code {
+    public string Filtro { get; set; } = string.Empty;
+    public string ValorFiltro { get; set; } = string.Empty;
+
+    public List<Tickets> listaTickets { get; set; } = new List<Tickets>();
+    public List<Tecnicos> listaTecnicos { get; set; } = new List<Tecnicos>();
+    public List<Clientes> listaClientes { get; set; } = new List<Clientes>();
+
+    public List<string> prioridades = new List<string> { "Baja", "Media", "Alta", "Urgente" };
+
+    protected override async Task OnInitializedAsync()
+    {
+        listaTickets = await ticketsService.Listar(t => t.TicketId > 0);
+        listaClientes = await clientesService.Listar(c => c.ClienteId > 0);
+        listaTecnicos = await tecnicosService.Listar(t => t.TecnicoId > 0);
+    }
+
+    @*TODO*@
+    public async Task Buscar()
+    {
+        if (Filtro == string.Empty)
+        {
+            await Refresh();
+        }
+        if (Filtro == "Id")
+        {
+            listaTickets = await ticketsService.Listar(t => t.TicketId.ToString().Contains(ValorFiltro));
+        }
+        else if (Filtro == "Asunto")
+        {
+            listaTickets = await ticketsService.Listar(t => t.Asunto.Contains(ValorFiltro));
+        }
+        else if (Filtro == "Cliente")
+        {
+            listaTickets = await ticketsService.Listar(t => listaClientes.Find(c => c.Nombres == ValorFiltro).ClienteId == t.ClienteId);
+        }
+        else if (Filtro == "Tecnico")
+        {
+            listaTickets = await ticketsService.Listar(t => listaTecnicos.Find(c => c.Nombres == ValorFiltro).TecnicoId == t.TecnicoId);
+        }
+        else
+        {
+            Refresh();
+        }
+
+    }
+
+    public async Task Refresh()
+    {
+        listaTickets = await ticketsService.Listar(t => t.TicketId > 0);
+        listaClientes = await clientesService.Listar(c => c.ClienteId > 0);
+        listaTecnicos = await tecnicosService.Listar(t => t.TecnicoId > 0);
+    }
+
+    private async Task Eliminar(int ticketId)
+    {
+        var ticket = await ticketsService.Buscar(ticketId);
+        if (ticket != null)
+        {
+            await ticketsService.Eliminar(ticketId);
+            await Buscar();
+        }
+    }
+}
