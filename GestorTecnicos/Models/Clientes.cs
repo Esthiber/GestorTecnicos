@@ -8,7 +8,7 @@ namespace GestorTecnicos.Models
         public int ClienteId { get; set; }
 
         [Required]
-        public DateTime FechaIngreso { get; set; }
+        public DateTime FechaIngreso { get; set; } = DateTime.Now;
 
         [Required(ErrorMessage = "El Nombre es Requerido")]
         [RegularExpression(@"^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$", ErrorMessage = "En este campo solo se permiten letras.")]

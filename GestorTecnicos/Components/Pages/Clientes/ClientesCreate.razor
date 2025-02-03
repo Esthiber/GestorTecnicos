@@ -114,7 +114,6 @@
         listaTecnicos = await tecnicosService.Listar((t) => t.TecnicoId > 0);
         listaClientes = await clientesService.Listar((c) => c.ClienteId > 0);
         listaCiudades = await ciudadesService.Listar((c) => c.CiudadId > 0);
-        cliente.FechaIngreso = DateTime.Now;
     }
 
     public async Task<bool> ComprobarRNC(string RNC)
