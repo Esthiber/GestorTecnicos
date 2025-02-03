@@ -55,7 +55,7 @@
                 
                 @*LimiteCredito*@
                 <div class="mb-3">
-                    <label class="form-label"><strong>Limite Credito</strong></label>
+                    <label class="form-label"><strong>L&iacute;mite Credito</strong></label>
                     <InputNumber class="form-control" @bind-Value="cliente.LimiteCredito" />
                     <ValidationMessage For="@(() => cliente.LimiteCredito)" />
                 </div>
@@ -114,7 +114,6 @@
         listaTecnicos = await tecnicosService.Listar((t) => t.TecnicoId > 0);
         listaClientes = await clientesService.Listar((c) => c.ClienteId > 0);
         listaCiudades = await ciudadesService.Listar((c) => c.CiudadId > 0);
-        cliente.FechaIngreso = DateTime.Now;
     }
 
     public async Task<bool> ComprobarRNC(string RNC)
