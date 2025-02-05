@@ -15,5 +15,7 @@ namespace GestorTecnicos.DAL
 
         public DbSet<Tickets> Tickets { get; set; }
 
+        public DbSet<Sistemas> Sistemas { get; set; }
+
     }
 }
