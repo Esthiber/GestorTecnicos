@@ -18,5 +18,9 @@
         public static string TicketsIndex => "/tickets"; // URL de la página de inicial de la lista de tickets
         public static string TicketsCrear => "/tickets/create";
         public static string TicketsEditar => "/tickets/edit";
+
+        public static string SistemasIndex => "/sistemas"; // URL de la página de inicial de la lista de sistemas
+        public static string SistemasCrear => "/sistemas/create";
+        public static string SistemasEditar => "/sistemas/edit";
     }
 }
