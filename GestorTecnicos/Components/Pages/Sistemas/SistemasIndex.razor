@@ -1,0 +1,119 @@
+﻿@page "/Sistemas"
+@rendermode InteractiveServer
+@inject SistemasService sistemasService
+
+<h3>SistemasIndex</h3>
+<PageTitle>Lista de Ciudades</PageTitle>
+<div class="container">
+    <div class="card shadow-lg">
+        <div class="card-header space-between">
+            <h5 class="card-title text-center">Registro de T&eacute;cnicos</h5>
+            <a href="@Urls.SistemasCrear" class="btn btn-primary"> <span class="bi bi-plus-square bi-trask mt-3"></span> Crear</a>
+        </div>
+
+        <div class="card-body">
+
+            @*labels*@
+            <div class="row">
+
+                @*Filtrar por*@
+                <div class="col-3">
+                    <label class="col-form-label"><strong>Filtrar por</strong></label>
+                </div>
+
+                @*ValorFiltro*@
+                <div class="col-4">
+                    <label class="col-form-label"><strong>B&uacute;squeda</strong></label>
+                </div>
+            </div>
+
+            @*Inputs y botones*@
+            <div class="row align-items-center">
+                @*filtro*@
+                <div class="col-3">
+                    <InputSelect class="form-select" @bind-Value="Filtro">
+                        <option value="" selected disabled>Elija una opci&oacute;n</option>
+                        <option value="Id">Id</option>
+                        <option value="Descripcion">Descripci&oacute;n</option>
+                    </InputSelect>
+                </div>
+
+                @*Busqueda*@
+                <div class="col-4">
+                    <div class="input-group">
+                        <input class="form-control" @bind="ValorFiltro" placeholder="Buscar" />
+                        <button type="button" class="btn btn-outline-primary bi bi-search" @onclick="Buscar"> Search</button>
+                    </div>
+                </div>
+            </div>
+
+            <table class="table table-hover">
+                <thead class="table  table-striped text-black">
+                    <tr>
+
+                        <th>CiudadId</th>
+                        <th>Nombre</th>
+                        <th colspan="2" class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var sistema in listaSistemas)
+                    {
+                        <tr>
+                            @*Detalle*@
+                            <td> @sistema.SistemaId</td>
+                            <td> @sistema.Descripcion</td>
+
+                            @*BTN Editar*@
+                            <td class="text-center">
+                                <a href="@Urls.CiudadesEditar/@sistema.SistemaId" class="btn btn-outline-primary bi bi-pencil-square"></a>
+                            </td>
+
+                            @*BTN Eliminar*@
+                            <td class="text-center">
+                                <button class="btn btn-outline-danger bi bi-trash" @onclick="() => Eliminar(sistema.SistemaId)"></button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer space-between">
+            <label>Sistemas:  @listaSistemas.Count()</label>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    List<Sistemas> listaSistemas = new();
+    public string Filtro { get; set; } = string.Empty;
+    public string ValorFiltro { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Buscar();
+    }
+
+    public async Task Buscar()
+    {
+        if (Filtro == "Id")
+        {
+            listaSistemas = await sistemasService.Listar(s => s.SistemaId == Convert.ToInt32(ValorFiltro));
+        }
+        else if (Filtro == "Descripcion")
+        {
+            listaSistemas = await sistemasService.Listar(s => s.Descripcion.Contains(ValorFiltro));
+        }
+        else if (string.IsNullOrEmpty(ValorFiltro))
+        {
+            listaSistemas = await sistemasService.Listar(s => s.SistemaId > 0);
+        }
+    }
+
+    public async Task Eliminar(int id)
+    {
+        await sistemasService.Eliminar(id);
+        listaSistemas = await sistemasService.Listar(c => c.SistemaId > 0);
+    }
+}
