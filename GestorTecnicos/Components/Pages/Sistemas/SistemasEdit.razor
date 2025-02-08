@@ -1,16 +1,16 @@
-﻿@page "/sistemas/create"
+﻿@page "/sistemas/edit/{id:int}"
 @rendermode InteractiveServer
 @inject NavigationManager navigationManager
 @inject SistemasService sistemasService
-<h3>SistemasCreate</h3>
-<PageTitle>Crear Sistema</PageTitle>
+
+<PageTitle>Editar Sistema</PageTitle>
 <EditForm Model="sistema" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
 
     <div class="container">
         <div class="card shadow-lg">
             <div class="card-header text-center">
-                <h5 class="card-title">Crear Sistema <i class="bi bi-person-fill-gear"></i></h5>
+                <h5 class="card-title">Editar Sistema <i class="bi bi-person-fill-gear"></i></h5>
             </div>
 
             <div class="card-body">
@@ -46,11 +46,17 @@
 </EditForm>
 
 @code {
-    Sistemas sistema = new();
+    [Parameter] public int Id { get; set; }
+    Sistemas sistema= new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        sistema = await sistemasService.Buscar(Id) ?? new();
+    }
 
     private async Task Guardar()
     {
-        await sistemasService.Guardar(sistema);
+        await sistemasService.Modificar(sistema);
         navigationManager.NavigateTo(Urls.SistemasIndex);
     }
 }
