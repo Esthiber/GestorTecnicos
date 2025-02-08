@@ -1,0 +1,62 @@
+﻿@page "/sistemas/edit/{id:int}"
+@rendermode InteractiveServer
+@inject NavigationManager navigationManager
+@inject SistemasService sistemasService
+
+<PageTitle>Editar Sistema</PageTitle>
+<EditForm Model="sistema" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+
+    <div class="container">
+        <div class="card shadow-lg">
+            <div class="card-header text-center">
+                <h5 class="card-title">Editar Sistema <i class="bi bi-person-fill-gear"></i></h5>
+            </div>
+
+            <div class="card-body">
+                @*SistemaId*@
+                <div class="mb-3">
+                    <label class="form-label"><strong>SistemaId</strong></label>
+                    <InputNumber class="form-control" @bind-Value="sistema.SistemaId" readonly />
+                </div>
+                @*Descripcion*@
+                <div class="mb-3">
+                    <label class="form-label"><strong>Descripcion</strong></label>
+                    <InputText class="form-control" @bind-Value="sistema.Descripcion" />
+                    <ValidationMessage For="@(() => sistema.Descripcion)" />
+                </div>
+                @*Complejidad*@
+                <div class="mb-3">
+                    <label class="form-label"><strong>Complejidad</strong></label>
+                    <InputNumber class="form-control" @bind-Value="sistema.Complejidad" />
+                    <ValidationMessage For="@(() => sistema.Complejidad)" />
+                </div>
+            </div>
+
+            @*Footer*@
+            <div class="card-footer text-center mt-2">
+                <a href="@Urls.SistemasIndex" class="btn btn-secondary">
+                    <span class="bi bi-arrow-left"></span> Volver
+                </a>
+                <button type="submit" class="btn btn-primary bi bi-floppy"> Guardar</button>
+            </div>
+        </div>
+    </div>
+
+</EditForm>
+
+@code {
+    [Parameter] public int Id { get; set; }
+    Sistemas sistema= new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        sistema = await sistemasService.Buscar(Id) ?? new();
+    }
+
+    private async Task Guardar()
+    {
+        await sistemasService.Modificar(sistema);
+        navigationManager.NavigateTo(Urls.SistemasIndex);
+    }
+}
