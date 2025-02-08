@@ -1,4 +1,4 @@
-﻿--Tecnicos
+﻿-- Tecnicos
 INSERT INTO [dbo].[Tecnicos] (Nombres, SueldoHora) VALUES
 ('Juan Pérez', 15.50),
 ('María Gómez', 18.75),
@@ -46,48 +46,49 @@ INSERT INTO [dbo].[Ciudades] (Nombre) VALUES
 
 -- Clientes
 INSERT INTO [dbo].[Clientes] (FechaIngreso, Nombres, Direccion, Rnc, LimiteCredito, TecnicoId, CiudadId) VALUES
-('2024-01-01', 'Carlos Medina', 'Av. Independencia #123', '101234567', 5000.00, 11, 2),
-('2024-02-05', 'María Rodríguez', 'Calle Duarte #456', '102345678', 7500.00, 12, 3),
-('2024-03-10', 'Luis Pérez', 'Calle Sánchez #789', '103456789', 6200.00, 13, 4),
-('2024-04-15', 'Ana González', 'Av. Bolívar #101', '104567890', 9000.00, 14, 5),
-('2024-05-20', 'Pedro Fernández', 'Calle Mella #202', '105678901', 4500.00, 15, 6),
-('2024-06-25', 'Laura Ramírez', 'Av. Churchill #303', '106789012', 8200.00, 16, 7),
-('2024-07-30', 'Jorge Herrera', 'Calle El Conde #404', '107890123', 6800.00, 17, 8),
-('2024-08-05', 'Carmen Torres', 'Av. Lincoln #505', '108901234', 7200.00, 18, 9),
-('2024-09-10', 'Miguel López', 'Calle Mercedes #606', '109012345', 5500.00, 19, 10),
-('2024-10-15', 'Sofía Díaz', 'Av. 27 de Febrero #707', '110123456', 7900.00, 20, 11),
-('2024-11-20', 'Roberto Vargas', 'Calle Luperón #808', '111234567', 6700.00, 21, 12),
-('2024-12-25', 'Elena Castillo', 'Av. Sarasota #909', '112345678', 9300.00, 22, 13),
-('2023-01-30', 'Andrés Navarro', 'Calle Las Américas #1010', '113456789', 4800.00, 23, 14),
-('2023-02-05', 'Isabel Ríos', 'Av. Venezuela #1111', '114567890', 8100.00, 24, 15),
-('2023-03-10', 'Fernando Molina', 'Calle España #1212', '115678901', 7400.00, 25, 16),
-('2023-04-15', 'Patricia Ortega', 'Av. México #1313', '116789012', 8700.00, 26, 17),
-('2023-05-20', 'Ricardo Jiménez', 'Calle Francia #1414', '117890123', 6900.00, 27, 18),
-('2023-06-25', 'Gabriela Silva', 'Av. Colombia #1515', '118901234', 5600.00, 28, 19),
-('2023-07-30', 'Héctor Mendoza', 'Calle Italia #1616', '119012345', 9200.00, 29, 20),
-('2023-08-05', 'Daniela Guzmán', 'Av. Kennedy #1717', '120123456', 8400.00, 30, 21);
-
+('2024-01-01', 'Carlos Medina', 'Av. Independencia #123', '101234567', 5000.00, 1, 2),
+('2024-02-05', 'María Rodríguez', 'Calle Duarte #456', '102345678', 7500.00, 2, 3),
+('2024-03-10', 'Luis Pérez', 'Calle Sánchez #789', '103456789', 6200.00, 3, 4),
+('2024-04-15', 'Ana González', 'Av. Bolívar #101', '104567890', 9000.00, 4, 5),
+('2024-05-20', 'Pedro Fernández', 'Calle Mella #202', '105678901', 4500.00, 5, 6),
+('2024-06-25', 'Laura Ramírez', 'Av. Churchill #303', '106789012', 8200.00, 6, 7),
+('2024-07-30', 'Jorge Herrera', 'Calle El Conde #404', '107890123', 6800.00, 7, 8),
+('2024-08-05', 'Carmen Torres', 'Av. Lincoln #505', '108901234', 7200.00, 8, 9),
+('2024-09-10', 'Miguel López', 'Calle Mercedes #606', '109012345', 5500.00, 9, 10),
+('2024-10-15', 'Sofía Díaz', 'Av. 27 de Febrero #707', '110123456', 7900.00, 10, 11);
 
 -- Tickets
 INSERT INTO [dbo].[Tickets] (Fecha, Prioridad, ClienteId, TecnicoId, Asunto, Descripcion, TiempoInvertido) VALUES
-('2024-01-05', 1, 10, 11, 'Falla en el sistema', 'El sistema no responde al iniciar sesión', 45),
-('2024-01-10', 2, 11, 12, 'Problema con impresora', 'La impresora no imprime documentos en red', 30),
-('2024-01-15', 3, 12, 13, 'Error en base de datos', 'Se presentan errores de integridad en la BD', 60),
-('2024-01-20', 1, 13, 14, 'Fallo de red', 'Pérdida de conexión en varios equipos', 90),
-('2024-01-25', 2, 14, 15, 'Correo no funciona', 'Los correos no se están enviando ni recibiendo', 40),
-('2024-02-01', 3, 15, 16, 'Actualización de software', 'Requiere actualización de sistema operativo', 120),
-('2024-02-05', 1, 16, 17, 'Problema con acceso', 'Usuario no puede acceder a la plataforma', 35),
-('2024-02-10', 2, 17, 18, 'Falla en servidor', 'El servidor presenta reinicios inesperados', 95),
-('2024-02-15', 3, 18, 19, 'Solicitud de instalación', 'Instalación de nuevos programas en PCs', 80),
-('2024-02-20', 1, 19, 20, 'Pantalla azul', 'La PC muestra pantalla azul al iniciar', 50),
-('2024-02-25', 2, 20, 21, 'Copia de seguridad', 'Solicitan respaldo de información crítica', 60),
-('2024-03-01', 3, 21, 22, 'Cambio de hardware', 'Sustitución de discos duros defectuosos', 110),
-('2024-03-05', 1, 22, 23, 'Virus detectado', 'Equipos afectados por malware', 70),
-('2024-03-10', 2, 23, 24, 'Problema con VPN', 'VPN no se conecta correctamente', 45),
-('2024-03-15', 3, 24, 25, 'Configuración de red', 'Se requiere reconfigurar la red interna', 85),
-('2024-03-20', 1, 25, 26, 'Problema con periféricos', 'El teclado y ratón no funcionan bien', 20),
-('2024-03-25', 2, 26, 27, 'Revisión de seguridad', 'Solicitan auditoría de seguridad en sistemas', 100),
-('2024-04-01', 3, 27, 28, 'Optimización de base de datos', 'Mejorar el rendimiento de consultas', 130),
-('2024-04-05', 1, 28, 29, 'Problema con monitor', 'Pantalla parpadea y se apaga sola', 25),
-('2024-04-10', 2, 29, 30, 'Solicitud de soporte', 'Dudas sobre el uso de ciertas aplicaciones', 40);
+('2024-01-05', 1, 1, 1, 'Falla en el sistema', 'El sistema no responde al iniciar sesión', 45),
+('2024-01-10', 2, 2, 2, 'Problema con impresora', 'La impresora no imprime documentos en red', 30),
+('2024-01-15', 3, 3, 3, 'Error en base de datos', 'Se presentan errores de integridad en la BD', 60),
+('2024-01-20', 1, 4, 4, 'Fallo de red', 'Pérdida de conexión en varios equipos', 90),
+('2024-01-25', 2, 5, 5, 'Correo no funciona', 'Los correos no se están enviando ni recibiendo', 40),
+('2024-02-01', 3, 6, 6, 'Actualización de software', 'Requiere actualización de sistema operativo', 120),
+('2024-02-05', 1, 7, 7, 'Problema con acceso', 'Usuario no puede acceder a la plataforma', 35),
+('2024-02-10', 2, 8, 8, 'Falla en servidor', 'El servidor presenta reinicios inesperados', 95),
+('2024-02-15', 3, 9, 9, 'Solicitud de instalación', 'Instalación de nuevos programas en PCs', 80),
+('2024-02-20', 1, 10, 10, 'Pantalla azul', 'La PC muestra pantalla azul al iniciar', 50);
+
+INSERT INTO Sistemas (Descripcion, Complejidad) VALUES
+('Sistema de Inventario', 45.5),
+('Sistema de Facturación', 30.2),
+('Gestión de Clientes', 70.8),
+('Plataforma de Recursos Humanos', 25.6),
+('Sistema de Monitoreo', 80.3),
+('Software de Contabilidad', 55.4),
+('Aplicación de Control de Acceso', 40.1),
+('Plataforma de E-commerce', 95.7),
+('Sistema de Logística', 65.3),
+('Gestión de Documentos', 20.5),
+('Software de Punto de Venta', 50.0),
+('Sistema de Reservas', 33.8),
+('Plataforma de e-Learning', 75.9),
+('Gestión de Tickets', 22.4),
+('Sistema de Reportes', 15.7),
+('Software de Monitoreo de Servidores', 88.2),
+('Plataforma de Streaming', 99.9),
+('Sistema de Alertas', 10.3),
+('Aplicación de Encuestas', 18.9),
+('Gestión de Activos', 28.7);
 
